@@ -106,7 +106,7 @@ export default function BirthdayDatePicker({ id, value, onChange, placeholder = 
               onClick={nextMonth}
               className="birthday-picker__nav-btn"
               aria-label="Next month"
-              disabled={year >= new Date().getFullYear() && month >= new Date().getMonth()}
+              disabled={year === new Date().getFullYear() && month >= new Date().getMonth()}
             >
               ›
             </button>
