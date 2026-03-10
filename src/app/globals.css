@@ -105,6 +105,104 @@ body::before {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+/* Login page: Google-only hero layout */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.login-page__inner {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.login-page__header {
+  margin-bottom: 3.5rem;
+}
+
+.login-page__logo {
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--terracotta);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.login-page__hero {
+  margin-bottom: 3rem;
+}
+
+.login-page__tagline {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0 0 2.5rem;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-page__error {
+  font-size: 0.85rem;
+  color: #C0392B;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.login-page__footer p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Hero Google button — focal point of the login page */
+.btn-google-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+  background: var(--card);
+  color: var(--charcoal);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 2px solid var(--terracotta);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(196, 113, 74, 0.12);
+}
+
+.btn-google-hero:hover:not(:disabled) {
+  background: var(--warm-white);
+  box-shadow: 0 4px 16px rgba(196, 113, 74, 0.18);
+  transform: translateY(-2px);
+}
+
+.btn-google-hero:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-google-hero:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.btn-google-hero__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--border);
