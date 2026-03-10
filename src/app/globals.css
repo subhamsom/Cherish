@@ -82,6 +82,29 @@ body::before {
   background-color: var(--warm-white);
 }
 
+.btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: white;
+  color: var(--charcoal);
+  padding: 0.65rem 1rem;
+  border-radius: 2px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.btn-google:hover {
+  background-color: var(--warm-white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--border);

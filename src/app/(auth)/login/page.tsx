@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { login, signup } from '@/app/auth/actions'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
 
   async function handleSubmit(formData: FormData) {
     setError(null)
@@ -17,6 +19,25 @@ export default function LoginPage() {
       setError(result.error)
       setLoading(false)
     }
+  }
+
+  async function handleGoogleSignIn() {
+    setError(null)
+    setGoogleLoading(true)
+    const supabase = createClient()
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`,
+      },
+    })
+    if (error) {
+      setError(error.message)
+      setGoogleLoading(false)
+      return
+    }
+    if (data?.url) window.location.href = data.url
+    else setGoogleLoading(false)
   }
 
   return (
@@ -38,6 +59,22 @@ export default function LoginPage() {
         </div>
 
         <div className="card" style={{ padding: '2rem' }}>
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={googleLoading}
+            className="btn-google"
+            style={{ width: '100%', marginBottom: '1.25rem', opacity: googleLoading ? 0.7 : 1 }}
+          >
+            {googleLoading ? 'Redirecting…' : 'Continue with Google'}
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>or</span>
+            <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          </div>
+
           <form action={handleSubmit}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {mode === 'signup' && (

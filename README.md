@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Google OAuth (Supabase Auth)
+
+To enable “Continue with Google” on the login page:
+
+1. **Supabase Dashboard** → Authentication → Providers → enable **Google** and add your Google OAuth Client ID and Secret (from Google Cloud Console).
+2. **Google Cloud Console** → APIs & Services → Credentials → create an OAuth 2.0 Client ID (Web application). Add the authorized redirect URI: `https://<your-project-ref>.supabase.co/auth/v1/callback` (from Supabase → Auth → URL Configuration).
+3. **Supabase** → Authentication → URL Configuration → add your app’s redirect URL(s), e.g. `http://localhost:3000/auth/callback` for local dev and `https://yourdomain.com/auth/callback` for production.
+
+After Google sign-in, users are sent to `/auth/callback`, which exchanges the code for a session and redirects to the dashboard.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
