@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { logout } from '@/app/auth/actions'
+import { usePathname, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: '◇' },
@@ -12,6 +12,14 @@ const navLinks = [
 
 export default function AppNav() {
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
+
+  async function handleSignOut() {
+    await supabase.auth.signOut()
+    router.push('/')
+    router.refresh()
+  }
 
   return (
     <>
@@ -55,8 +63,10 @@ export default function AppNav() {
           ))}
         </div>
 
-        <form action={logout}>
-          <button type="submit" style={{
+        <button
+          type="button"
+          onClick={handleSignOut}
+          style={{
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -65,10 +75,10 @@ export default function AppNav() {
             padding: '0.5rem 0.75rem',
             textAlign: 'left',
             width: '100%',
-          }}>
-            Sign out
-          </button>
-        </form>
+          }}
+        >
+          Sign out
+        </button>
       </nav>
 
       {/* Mobile bottom bar */}

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import type { Person, Entry } from '@/types'
+import type { Person } from '@/types'
 
 export default async function DashboardPage() {
   const supabase = await createClient()

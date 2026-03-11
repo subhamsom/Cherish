@@ -26,8 +26,8 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
   const [people, setPeople] = useState<Person[]>([])
   const [personId, setPersonId] = useState(entry?.person_id || defaultPersonId || '')
   const [type, setType] = useState<EntryType>(entry?.type || 'moment')
-  const [title, setTitle] = useState(entry?.title || '')
-  const [body, setBody] = useState(entry?.body || '')
+  const [title, setTitle] = useState(entry?.title ?? '')
+  const [body, setBody] = useState(entry?.body ?? '')
   const [date, setDate] = useState(entry?.date || new Date().toISOString().split('T')[0])
   const [tags, setTags] = useState<string>(entry?.tags?.join(', ') || '')
   const [mood, setMood] = useState(entry?.mood || '')
@@ -49,7 +49,6 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
     if (!user) return
 
     const tagsArray = tags.split(',').map(t => t.trim()).filter(Boolean)
-
     const payload = {
       user_id: user.id,
       person_id: personId,

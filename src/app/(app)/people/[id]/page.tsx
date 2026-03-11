@@ -78,22 +78,17 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {(entries as Entry[]).map((entry) => (
               <Link key={entry.id} href={`/entries/${entry.id}`} style={{ textDecoration: 'none' }}>
-                <div className="card" style={{ cursor: 'pointer' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                    <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--terracotta)', background: 'var(--warm-white)', padding: '0.2rem 0.5rem', borderRadius: '2px' }}>
-                      {ENTRY_TYPE_LABELS[entry.type]}
-                    </span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
-                      {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
+                <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', cursor: 'pointer' }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--terracotta)', background: 'var(--warm-white)', padding: '0.2rem 0.5rem', borderRadius: '2px', whiteSpace: 'nowrap', marginTop: '0.15rem' }}>
+                    {ENTRY_TYPE_LABELS[entry.type] ?? entry.type}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: '0.9rem', fontWeight: 400, color: 'var(--charcoal)', marginBottom: '0.2rem' }}>{entry.title}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+                      {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
                   </div>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 400, color: 'var(--charcoal)', marginBottom: entry.body ? '0.4rem' : 0 }}>{entry.title}</p>
-                  {entry.body && <p style={{ fontSize: '0.8rem', color: 'var(--muted)', lineHeight: 1.5 }}>{entry.body}</p>}
-                  {entry.tags?.length > 0 && (
-                    <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-                      {entry.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
-                    </div>
-                  )}
+                  {entry.mood && <span style={{ fontSize: '1.1rem' }}>{entry.mood}</span>}
                 </div>
               </Link>
             ))}
