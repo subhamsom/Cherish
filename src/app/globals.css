@@ -2,16 +2,29 @@
 @import "tailwindcss";
 
 :root {
-  --cream: #FAF7F2;
-  --warm-white: #F5F0E8;
-  --dusty-rose: #E8C4B8;
-  --terracotta: #C4714A;
-  --terracotta-light: #D4896A;
-  --charcoal: #2C2520;
-  --charcoal-light: #4A3F38;
-  --muted: #9B8B82;
-  --border: #E2D8CE;
-  --card: #FFFCF8;
+  /* Core canvas + surfaces (light, warm) */
+  --canvas-deep: #FAF6F0;
+  --canvas: #F4E9DE;
+  --canvas-soft: #EFE0D2;
+
+  /* Warm accents */
+  --cream: #FAF6F0;
+  --warm-white: #F7EEE4;
+  --dusty-rose: #E4B8B0;
+  --terracotta: #C96A3F;
+  --terracotta-light: #DD885C;
+
+  /* Text + neutrals */
+  --charcoal: #2F2520;
+  --charcoal-soft: #5B4940;
+  --charcoal-muted: #8D7B71;
+  --muted: #A09088;
+
+  --border-subtle: rgba(61, 46, 36, 0.12);
+  --border-strong: rgba(61, 46, 36, 0.25);
+
+  --card: #FFFFFF;
+  --card-elevated: #FFF7F0;
 }
 
 * {
@@ -19,11 +32,13 @@
 }
 
 html {
-  background-color: var(--cream);
+  background-color: var(--canvas-deep);
 }
 
 body {
-  background-color: var(--cream);
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(circle at top left, #FFF4E6 0, var(--canvas) 38%, var(--canvas-deep) 100%);
   color: var(--charcoal);
   font-family: 'DM Sans', sans-serif;
   font-weight: 300;
@@ -39,47 +54,93 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.4;
+  z-index: 0;
+  mix-blend-mode: multiply;
 }
 
+/* Anchor defaults */
+a {
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* App shell */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.app-main {
+  flex: 1;
+  padding: 1.5rem 1.25rem 2.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .app-main {
+    padding: 2.5rem 2rem 3.5rem;
+  }
+}
+
+/* Primary buttons */
 .btn-primary {
-  background-color: var(--terracotta);
-  color: white;
-  padding: 0.6rem 1.4rem;
-  border-radius: 2px;
+  background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-light) 100%);
+  color: #140D0A;
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.02em;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
   border: none;
   cursor: pointer;
+  box-shadow:
+    0 10px 25px rgba(207, 106, 59, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .btn-primary:hover {
-  background-color: var(--terracotta-light);
+  background: linear-gradient(135deg, var(--terracotta-light) 0%, var(--terracotta) 100%);
   transform: translateY(-1px);
+  box-shadow:
+    0 16px 32px rgba(207, 106, 59, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .btn-secondary {
-  background-color: transparent;
-  color: var(--charcoal-light);
+  background: transparent;
+  color: var(--charcoal-soft);
   padding: 0.6rem 1.4rem;
-  border-radius: 2px;
+  border-radius: 999px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.02em;
-  transition: background-color 0.2s ease;
-  border: 1px solid var(--border);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
+  border: 1px solid var(--border-subtle);
   cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background-color: var(--warm-white);
+  background-color: rgba(201, 106, 63, 0.06);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
 }
 
 .btn-google {
@@ -87,22 +148,24 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: white;
-  color: var(--charcoal);
+  background-color: rgba(246, 236, 224, 0.96);
+  color: #231711;
   padding: 0.65rem 1rem;
-  border-radius: 2px;
+  border-radius: 999px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(25, 19, 17, 0.06);
   cursor: pointer;
 }
 
 .btn-google:hover {
   background-color: var(--warm-white);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(31, 20, 16, 0.06);
 }
 
 /* Login page: Google-only hero layout */
@@ -118,6 +181,7 @@ body::before {
   width: 100%;
   max-width: 420px;
   text-align: center;
+  background: radial-gradient(circle at top, rgba(255, 244, 230, 0.5) 0, transparent 52%);
 }
 
 .login-page__header {
@@ -139,7 +203,7 @@ body::before {
 .login-page__tagline {
   font-size: 1.05rem;
   line-height: 1.65;
-  color: var(--muted);
+  color: var(--charcoal-soft);
   margin: 0 0 2.5rem;
   max-width: 320px;
   margin-left: auto;
@@ -167,10 +231,10 @@ body::before {
   gap: 0.75rem;
   width: 100%;
   max-width: 320px;
-  background: var(--card);
-  color: var(--charcoal);
+  background: linear-gradient(135deg, rgba(250, 243, 232, 0.98), rgba(244, 226, 210, 0.98));
+  color: #23150F;
   padding: 1rem 1.5rem;
-  border-radius: 4px;
+  border-radius: 999px;
   font-family: 'DM Sans', sans-serif;
   font-size: 1.05rem;
   font-weight: 500;
@@ -178,12 +242,16 @@ body::before {
   border: 2px solid var(--terracotta);
   cursor: pointer;
   transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 2px 8px rgba(196, 113, 74, 0.12);
+  box-shadow:
+    0 18px 40px rgba(207, 106, 59, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .btn-google-hero:hover:not(:disabled) {
   background: var(--warm-white);
-  box-shadow: 0 4px 16px rgba(196, 113, 74, 0.18);
+  box-shadow:
+    0 24px 52px rgba(207, 106, 59, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.6);
   transform: translateY(-2px);
 }
 
@@ -204,39 +272,71 @@ body::before {
 }
 
 .card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
+  background: radial-gradient(circle at top left, rgba(255, 244, 232, 0.85), transparent 60%),
+    var(--card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem;
+  box-shadow:
+    0 10px 24px rgba(47, 37, 30, 0.15);
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.card--subtle {
+  background: linear-gradient(135deg, #FFF7F0, #F8E6D8);
+}
+
+.card--clickable {
+  cursor: pointer;
+}
+
+.card--clickable:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  background: radial-gradient(circle at top left, rgba(246, 236, 224, 0.3), transparent 55%),
+    var(--card-elevated);
+  box-shadow:
+    0 16px 40px rgba(47, 37, 30, 0.22);
 }
 
 .input {
   width: 100%;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 2px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
   padding: 0.625rem 0.875rem;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
   font-weight: 300;
   color: var(--charcoal);
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
   outline: none;
 }
 
 .input:focus {
   border-color: var(--terracotta);
+  background: #FFFBF7;
+  box-shadow:
+    0 0 0 1px rgba(201, 106, 63, 0.4),
+    0 0 0 4px rgba(201, 106, 63, 0.16);
 }
 
-/* Date inputs: max = today, cream/terracotta styling (overrides browser blues) */
-.input--date,
-input.input[type="date"] {
+/* Native date input only — no calendar widget. Style matches .input; light theme. */
+input[type="date"] {
   accent-color: var(--terracotta);
   color-scheme: light;
 }
 
 .input::placeholder {
-  color: var(--muted);
+  color: var(--charcoal-muted);
 }
 
 .label {

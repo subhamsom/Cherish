@@ -99,9 +99,9 @@ export default function PersonForm({ person }: PersonFormProps) {
         <div>
           <label className="label" htmlFor="birthday">Birthday (optional)</label>
           <input
-            className="input input--date"
-            id="birthday"
             type="date"
+            id="birthday"
+            className="input"
             value={birthday}
             onChange={e => setBirthday(e.target.value)}
             max={todayMax()}
