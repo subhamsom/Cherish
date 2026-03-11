@@ -29,14 +29,13 @@ export default function AppNav() {
         style={{
           width: '250px',
           minHeight: '100vh',
-          borderRight: '1px solid var(--border-subtle)',
-          padding: '2rem 1.75rem 2rem',
+          borderRight: '1px solid var(--card-border)',
+          padding: '2.25rem 1.75rem 2rem',
           display: 'flex',
           flexDirection: 'column',
           position: 'sticky',
           top: 0,
-          background:
-            'radial-gradient(circle at top left, rgba(250, 243, 232, 0.08), transparent 55%)',
+          background: 'var(--bg-primary)',
         }}
       >
         <Link href="/dashboard" style={{ textDecoration: 'none' }}>
@@ -87,19 +86,19 @@ export default function AppNav() {
                     letterSpacing: isPrimary ? '0.12em' : '0.02em',
                     textTransform: isPrimary ? 'uppercase' : 'none',
                     background: isPrimary
-                      ? 'linear-gradient(135deg, var(--terracotta), var(--terracotta-light))'
+                      ? 'var(--accent)'
                       : undefined,
                     color: isPrimary
-                      ? '#1B120E'
+                      ? '#FFFFFF'
                       : isActive
-                      ? 'var(--charcoal)'
-                      : 'var(--charcoal-muted)',
+                      ? 'var(--text-primary)'
+                      : 'var(--text-secondary)',
                     border: isPrimary
-                      ? '1px solid rgba(255, 255, 255, 0.5)'
+                      ? 'none'
                       : '1px solid transparent',
-                    borderLeft: !isPrimary ? (isActive ? '3px solid var(--terracotta)' : '3px solid transparent') : undefined,
+                    borderLeft: !isPrimary ? (isActive ? '3px solid var(--accent)' : '3px solid transparent') : undefined,
                     boxShadow: isPrimary
-                      ? '0 14px 28px rgba(207, 106, 59, 0.5)'
+                      ? '0 4px 12px rgba(124, 58, 237, 0.3)'
                       : undefined,
                     transition: 'all 0.16s ease',
                   }}
@@ -125,7 +124,7 @@ export default function AppNav() {
                         width: '6px',
                         height: '6px',
                         borderRadius: '999px',
-                        background: 'var(--terracotta)',
+                        background: 'var(--accent)',
                       }}
                     />
                   )}
@@ -175,8 +174,8 @@ export default function AppNav() {
           alignItems: 'center',
           justifyContent: 'space-between',
           backdropFilter: 'blur(16px)',
-          background: 'linear-gradient(to bottom, rgba(250, 246, 240, 0.98), rgba(250, 246, 240, 0.85), transparent)',
-          borderBottom: '1px solid var(--border-subtle)',
+          background: 'var(--bg-primary)',
+          borderBottom: '1px solid var(--card-border)',
           zIndex: 100,
         }}
       >
@@ -219,9 +218,9 @@ export default function AppNav() {
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
                       backgroundColor: isActive
-                        ? 'rgba(201, 106, 63, 0.12)'
-                        : 'rgba(47, 37, 32, 0.06)',
-                      color: isActive ? 'var(--terracotta)' : 'var(--charcoal-muted)',
+                        ? 'var(--bg-secondary)'
+                        : 'transparent',
+                      color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
                       cursor: 'pointer',
                     }}
                   >
@@ -237,27 +236,25 @@ export default function AppNav() {
       <Link href="/entries/new" className="mobile-nav" style={{ textDecoration: 'none' }}>
         <button
           type="button"
-          style={{
-            position: 'fixed',
-            right: '1.25rem',
-            bottom: '1.6rem',
-            zIndex: 90,
-            padding: '0.85rem 1.1rem',
-            borderRadius: 999,
-            border: 'none',
-            background:
-              'radial-gradient(circle at top left, #FFE6D3 0, #F3C19E 55%, #E58757 100%)',
-            color: '#20120A',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            boxShadow:
-              '0 18px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.5)',
-          }}
+            style={{
+              position: 'fixed',
+              right: '1.25rem',
+              bottom: '1.6rem',
+              zIndex: 90,
+              padding: '0.85rem 1.1rem',
+              borderRadius: 12,
+              border: 'none',
+              background: 'var(--accent)',
+              color: '#FFFFFF',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              boxShadow: '0 4px 14px rgba(124, 58, 237, 0.4)',
+            }}
         >
           <span
             aria-hidden
@@ -265,8 +262,8 @@ export default function AppNav() {
               width: '22px',
               height: '22px',
               borderRadius: '999px',
-              background: '#20120A',
-              color: '#FFE6D3',
+              background: 'rgba(255,255,255,0.3)',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -284,11 +281,11 @@ export default function AppNav() {
           background: transparent;
         }
         .desktop-nav .nav-link:hover {
-          background: rgba(201, 106, 63, 0.08);
-          color: var(--charcoal);
+          background: var(--bg-secondary);
+          color: var(--text-primary);
         }
         .desktop-nav .nav-link--active {
-          background: rgba(201, 106, 63, 0.1);
+          background: var(--bg-secondary);
         }
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }

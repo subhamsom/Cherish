@@ -22,6 +22,10 @@ create table if not exists public.people (
 
 alter table public.people enable row level security;
 
+drop policy if exists "people_select" on public.people;
+drop policy if exists "people_insert" on public.people;
+drop policy if exists "people_update" on public.people;
+drop policy if exists "people_delete" on public.people;
 create policy "people_select" on public.people for select using (auth.uid() = user_id);
 create policy "people_insert" on public.people for insert with check (auth.uid() = user_id);
 create policy "people_update" on public.people for update using (auth.uid() = user_id);
@@ -47,6 +51,10 @@ create table if not exists public.entries (
 
 alter table public.entries enable row level security;
 
+drop policy if exists "entries_select" on public.entries;
+drop policy if exists "entries_insert" on public.entries;
+drop policy if exists "entries_update" on public.entries;
+drop policy if exists "entries_delete" on public.entries;
 create policy "entries_select" on public.entries for select using (auth.uid() = user_id);
 create policy "entries_insert" on public.entries for insert with check (auth.uid() = user_id);
 create policy "entries_update" on public.entries for update using (auth.uid() = user_id);
@@ -73,6 +81,10 @@ create table if not exists public.reminders (
 
 alter table public.reminders enable row level security;
 
+drop policy if exists "reminders_select" on public.reminders;
+drop policy if exists "reminders_insert" on public.reminders;
+drop policy if exists "reminders_update" on public.reminders;
+drop policy if exists "reminders_delete" on public.reminders;
 create policy "reminders_select" on public.reminders for select using (auth.uid() = user_id);
 create policy "reminders_insert" on public.reminders for insert with check (auth.uid() = user_id);
 create policy "reminders_update" on public.reminders for update using (auth.uid() = user_id);

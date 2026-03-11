@@ -4,10 +4,19 @@ import type { Person } from '@/types'
 
 export default async function PeoplePage() {
   const supabase = await createClient()
-  const { data: people } = await supabase.from('people').select('*').order('name')
+  const { data: people, error: peopleError } = await supabase.from('people').select('*').order('name')
+
+  if (peopleError) {
+    console.error('[People page] Supabase error:', peopleError.message, peopleError.details)
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {peopleError && (
+        <div role="alert" style={{ padding: '1rem', background: '#FEE2E2', color: '#991B1B', borderRadius: '8px', fontSize: '0.875rem' }}>
+          Couldn&apos;t load people: {peopleError.message}. Check the terminal for details and ensure Supabase tables and RLS are set up.
+        </div>
+      )}
       <div
         style={{
           display: 'flex',
@@ -30,7 +39,7 @@ export default async function PeoplePage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2rem', fontWeight: 300, color: '#2C2C2C', margin: 0 }}
+            style={{ fontSize: '2rem', fontWeight: 300, color: 'var(--text-primary)', margin: 0 }}
           >
             People
           </h1>
@@ -44,7 +53,7 @@ export default async function PeoplePage() {
         <div className="card card--subtle" style={{ padding: '2.6rem 2.4rem' }}>
           <p
             className="serif"
-            style={{ fontSize: '1.5rem', color: '#2C2C2C', marginBottom: '0.9rem' }}
+            style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '0.9rem' }}
           >
             Everyone you love lives here.
           </p>
@@ -81,14 +90,13 @@ export default async function PeoplePage() {
                     width: '42px',
                     height: '42px',
                     borderRadius: '50%',
-                    background:
-                      'radial-gradient(circle at 20% 0%, #FFE5D4 0, #F3B99F 45%, #D97857 100%)',
+                    background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '1.15rem',
-                    color: '#2A1710',
+                    color: '#4C1D95',
                     fontFamily: 'Cormorant Garamond, serif',
                     fontWeight: 600,
                   }}
@@ -100,7 +108,7 @@ export default async function PeoplePage() {
                     style={{
                       fontSize: '0.96rem',
                       fontWeight: 400,
-                      color: '#2C2C2C',
+                      color: 'var(--text-primary)',
                       marginBottom: '0.15rem',
                     }}
                   >

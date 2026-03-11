@@ -106,10 +106,10 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
                 onClick={() => setType(t.value)}
                 style={{
                   padding: '0.6rem 1rem',
-                  borderRadius: '2px',
+                  borderRadius: '8px',
                   border: '1px solid',
-                  borderColor: type === t.value ? 'var(--terracotta)' : 'var(--border)',
-                  background: type === t.value ? 'var(--warm-white)' : 'transparent',
+                  borderColor: type === t.value ? 'var(--accent)' : 'var(--card-border)',
+                  background: type === t.value ? 'var(--bg-secondary)' : 'transparent',
                   textAlign: 'left',
                   cursor: 'pointer',
                   display: 'flex',
@@ -117,7 +117,7 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
                   gap: '0.5rem',
                 }}
               >
-                <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 300, color: type === t.value ? 'var(--terracotta)' : 'var(--charcoal)' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 300, color: type === t.value ? 'var(--accent)' : 'var(--text-primary)' }}>
                   {t.label}
                 </span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{t.desc}</span>
@@ -171,9 +171,9 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
                 key={m} type="button" onClick={() => setMood(mood === m ? '' : m)}
                 style={{
                   width: '36px', height: '36px', fontSize: '1.2rem',
-                  borderRadius: '2px', border: '1px solid',
-                  borderColor: mood === m ? 'var(--terracotta)' : 'var(--border)',
-                  background: mood === m ? 'var(--warm-white)' : 'transparent',
+                  borderRadius: '8px', border: '1px solid',
+                  borderColor: mood === m ? 'var(--accent)' : 'var(--card-border)',
+                  background: mood === m ? 'var(--bg-secondary)' : 'transparent',
                   cursor: 'pointer',
                 }}
               >

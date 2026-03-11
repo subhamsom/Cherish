@@ -79,11 +79,11 @@ export default function PersonForm({ person }: PersonFormProps) {
                 onClick={() => setRelationshipType(type)}
                 style={{
                   padding: '0.4rem 0.9rem',
-                  borderRadius: '2px',
+                  borderRadius: '8px',
                   border: '1px solid',
-                  borderColor: relationshipType === type ? 'var(--terracotta)' : 'var(--border)',
-                  background: relationshipType === type ? 'var(--terracotta)' : 'transparent',
-                  color: relationshipType === type ? 'white' : 'var(--muted)',
+                  borderColor: relationshipType === type ? 'var(--accent)' : 'var(--card-border)',
+                  background: relationshipType === type ? 'var(--accent)' : 'transparent',
+                  color: relationshipType === type ? 'white' : 'var(--text-secondary)',
                   fontSize: '0.8rem',
                   textTransform: 'capitalize',
                   cursor: 'pointer',

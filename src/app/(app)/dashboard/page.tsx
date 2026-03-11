@@ -8,7 +8,7 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const [{ data: people }, { data: entries }] = await Promise.all([
+  const [{ data: people, error: peopleError }, { data: entries, error: entriesError }] = await Promise.all([
     supabase.from('people').select('*').order('created_at', { ascending: false }),
     supabase
       .from('entries')
@@ -17,19 +17,22 @@ export default async function DashboardPage() {
       .limit(4),
   ])
 
+  if (peopleError) console.error('[Dashboard] people query error:', peopleError.message, peopleError.details)
+  if (entriesError) console.error('[Dashboard] entries query error:', entriesError.message, entriesError.details)
+
   const firstName = user?.user_metadata?.name?.split(' ')[0] || 'there'
 
   return (
-    <div style={{ paddingBottom: '5rem', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+    <div style={{ paddingBottom: '5rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
       {/* Greeting / hero */}
       <section>
         <div
           className="card card--subtle"
           style={{
-            padding: '1.6rem 1.6rem 1.4rem',
+            padding: '2rem 2rem 1.75rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem',
+            gap: '0.85rem',
           }}
         >
           <p
@@ -48,7 +51,7 @@ export default async function DashboardPage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2.1rem', fontWeight: 300, color: '#2C2C2C', margin: 0 }}
+            style={{ fontSize: '2.1rem', fontWeight: 300, color: 'var(--text-primary)', margin: 0 }}
           >
             Hello, {firstName}
           </h1>
@@ -92,7 +95,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: '#2C2C2C', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}
             >
               Circle of care
             </h2>
@@ -106,7 +109,7 @@ export default async function DashboardPage() {
           <div className="card card--subtle" style={{ textAlign: 'left', padding: '2.2rem' }}>
             <p
               className="serif"
-              style={{ fontSize: '1.3rem', color: '#2C2C2C', marginBottom: '0.75rem' }}
+              style={{ fontSize: '1.3rem', color: 'var(--text-primary)', marginBottom: '0.75rem' }}
             >
               Who lights up your world?
             </p>
@@ -159,13 +162,12 @@ export default async function DashboardPage() {
                         width: '44px',
                         height: '44px',
                         borderRadius: '50%',
-                        background:
-                          'radial-gradient(circle at 20% 0%, #FFE6D7 0, #F1B9A0 45%, #D97857 100%)',
+                        background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '1.3rem',
-                        color: '#2A1710',
+                        color: '#4C1D95',
                         fontFamily: 'Cormorant Garamond, serif',
                         fontWeight: 600,
                       }}
@@ -187,7 +189,7 @@ export default async function DashboardPage() {
                     style={{
                       fontSize: '0.95rem',
                       fontWeight: 400,
-                      color: '#2C2C2C',
+                      color: 'var(--text-primary)',
                     }}
                   >
                     {person.name}
@@ -214,7 +216,7 @@ export default async function DashboardPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderStyle: 'dashed',
-                  borderColor: 'rgba(250, 243, 232, 0.5)',
+                  borderColor: 'var(--card-border)',
                   borderWidth: '1px',
                 }}
               >
@@ -223,7 +225,7 @@ export default async function DashboardPage() {
                     width: '46px',
                     height: '46px',
                     borderRadius: '50%',
-                    border: '1px dashed rgba(250, 243, 232, 0.7)',
+                    border: '1px dashed var(--accent-secondary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -267,7 +269,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: '#2C2C2C', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}
             >
               Moments you&apos;ve saved
             </h2>
@@ -322,12 +324,12 @@ export default async function DashboardPage() {
                         fontSize: '0.65rem',
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
-                        color: '#1F130E',
-                        background:
-                          'linear-gradient(135deg, rgba(250, 243, 232, 0.98), rgba(244, 225, 210, 0.96))',
-                        padding: '0.2rem 0.55rem',
-                        borderRadius: '999px',
+                        color: 'var(--text-primary)',
+                        background: 'var(--bg-secondary)',
+                        padding: '0.25rem 0.6rem',
+                        borderRadius: '8px',
                         whiteSpace: 'nowrap',
+                        border: '1px solid var(--card-border)',
                       }}
                     >
                       {entry.type.replace('_', ' ')}
@@ -353,7 +355,7 @@ export default async function DashboardPage() {
                       style={{
                         fontSize: '0.95rem',
                         fontWeight: 400,
-                        color: '#2C2C2C',
+                        color: 'var(--text-primary)',
                         marginBottom: '0.15rem',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',

@@ -27,9 +27,9 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2.5rem' }}>
         <div style={{
           width: '64px', height: '64px', borderRadius: '50%', flexShrink: 0,
-          background: 'var(--dusty-rose)',
+          background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.8rem', color: 'var(--terracotta)',
+          fontSize: '1.8rem', color: '#4C1D95',
           fontFamily: 'Cormorant Garamond, serif', fontWeight: 500,
         }}>
           {person.name[0].toUpperCase()}
@@ -49,7 +49,7 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
       </div>
 
       {person.notes && (
-        <div className="card" style={{ marginBottom: '2rem', background: 'var(--warm-white)' }}>
+        <div className="card" style={{ marginBottom: '2rem', background: 'var(--bg-secondary)' }}>
           <p style={{ fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '0.5rem' }}>About</p>
           <p style={{ fontSize: '0.875rem', color: 'var(--charcoal-light)', lineHeight: 1.6 }}>{person.notes}</p>
         </div>
@@ -78,8 +78,8 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {(entries as Entry[]).map((entry) => (
               <Link key={entry.id} href={`/entries/${entry.id}`} style={{ textDecoration: 'none' }}>
-                <div className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', cursor: 'pointer' }}>
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--terracotta)', background: 'var(--warm-white)', padding: '0.2rem 0.5rem', borderRadius: '2px', whiteSpace: 'nowrap', marginTop: '0.15rem' }}>
+                <div className="card card--clickable" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--accent)', background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', whiteSpace: 'nowrap', marginTop: '0.15rem', border: '1px solid var(--card-border)' }}>
                     {ENTRY_TYPE_LABELS[entry.type] ?? entry.type}
                   </span>
                   <div style={{ flex: 1 }}>

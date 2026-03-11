@@ -31,7 +31,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
           ‹ {(entry as any).people?.name}
         </Link>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--terracotta)', background: 'var(--warm-white)', padding: '0.2rem 0.5rem', borderRadius: '2px' }}>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--accent)', background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
             {ENTRY_TYPE_LABELS[(entry as any).type]}
           </span>
         </div>
