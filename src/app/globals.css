@@ -228,6 +228,13 @@ body::before {
   border-color: var(--terracotta);
 }
 
+/* Date inputs: max = today, cream/terracotta styling (overrides browser blues) */
+.input--date,
+input.input[type="date"] {
+  accent-color: var(--terracotta);
+  color-scheme: light;
+}
+
 .input::placeholder {
   color: var(--muted);
 }
@@ -260,144 +267,4 @@ body::before {
 
 .fade-up {
   animation: fadeUp 0.4s ease forwards;
-}
-
-/* Birthday date picker — Cherish-styled calendar (cream, terracotta) */
-.birthday-picker {
-  position: relative;
-  width: 100%;
-}
-
-.birthday-picker__trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  appearance: none;
-}
-
-.birthday-picker__placeholder {
-  color: var(--muted);
-}
-
-.birthday-picker__chevron {
-  font-size: 0.6rem;
-  color: var(--muted);
-  pointer-events: none;
-}
-
-.birthday-picker__dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 50;
-  min-width: 280px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1rem;
-  box-shadow: 0 4px 20px rgba(44, 37, 32, 0.12);
-}
-
-.birthday-picker__nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.birthday-picker__nav-btn {
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  background: var(--cream);
-  color: var(--charcoal);
-  border-radius: 2px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-
-.birthday-picker__nav-btn:hover:not(:disabled) {
-  background: var(--warm-white);
-  border-color: var(--terracotta);
-  color: var(--terracotta);
-}
-
-.birthday-picker__nav-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.birthday-picker__month-year {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--charcoal);
-}
-
-.birthday-picker__weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  margin-bottom: 6px;
-}
-
-.birthday-picker__weekday {
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: center;
-  padding: 0.25rem 0;
-}
-
-.birthday-picker__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-}
-
-.birthday-picker__cell {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.birthday-picker__cell--pad {
-  background: transparent;
-  cursor: default;
-}
-
-.birthday-picker__cell--day {
-  background: transparent;
-  color: var(--charcoal);
-  font-family: 'DM Sans', sans-serif;
-}
-
-.birthday-picker__cell--day:hover:not(.birthday-picker__cell--disabled):not(.birthday-picker__cell--selected) {
-  background: var(--warm-white);
-  color: var(--charcoal);
-}
-
-.birthday-picker__cell--selected {
-  background: var(--terracotta);
-  color: white;
-  font-weight: 500;
-}
-
-.birthday-picker__cell--disabled {
-  color: var(--border);
-  cursor: not-allowed;
 }

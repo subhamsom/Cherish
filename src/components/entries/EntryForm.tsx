@@ -147,7 +147,14 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
         {/* Date */}
         <div>
           <label className="label" htmlFor="date">Date</label>
-          <input className="input" id="date" type="date" value={date} onChange={e => setDate(e.target.value)} />
+          <input
+            className="input input--date"
+            id="date"
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            max={new Date().toISOString().split('T')[0]}
+          />
         </div>
 
         {/* Tags */}

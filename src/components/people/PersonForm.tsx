@@ -4,9 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Person, RelationshipType } from '@/types'
-import BirthdayDatePicker from './BirthdayDatePicker'
 
 const RELATIONSHIP_TYPES: RelationshipType[] = ['partner', 'friend', 'family', 'colleague', 'other']
+
+function todayMax(): string {
+  return new Date().toISOString().split('T')[0]
+}
 
 interface PersonFormProps {
   person?: Person
@@ -95,7 +98,14 @@ export default function PersonForm({ person }: PersonFormProps) {
 
         <div>
           <label className="label" htmlFor="birthday">Birthday (optional)</label>
-          <BirthdayDatePicker id="birthday" value={birthday} onChange={setBirthday} placeholder="Pick a date" />
+          <input
+            className="input input--date"
+            id="birthday"
+            type="date"
+            value={birthday}
+            onChange={e => setBirthday(e.target.value)}
+            max={todayMax()}
+          />
         </div>
 
         <div>
