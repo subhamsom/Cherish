@@ -48,7 +48,7 @@ export default async function DashboardPage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2.1rem', fontWeight: 300, color: 'var(--cream)', margin: 0 }}
+            style={{ fontSize: '2.1rem', fontWeight: 300, color: '#2C2C2C', margin: 0 }}
           >
             Hello, {firstName}
           </h1>
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--cream)', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 400, color: '#2C2C2C', margin: 0 }}
             >
               Circle of care
             </h2>
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
           <div className="card card--subtle" style={{ textAlign: 'left', padding: '2.2rem' }}>
             <p
               className="serif"
-              style={{ fontSize: '1.3rem', color: 'var(--cream)', marginBottom: '0.75rem' }}
+              style={{ fontSize: '1.3rem', color: '#2C2C2C', marginBottom: '0.75rem' }}
             >
               Who lights up your world?
             </p>
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
                     style={{
                       fontSize: '0.95rem',
                       fontWeight: 400,
-                      color: 'var(--cream)',
+                      color: '#2C2C2C',
                     }}
                   >
                     {person.name}
@@ -267,7 +267,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--cream)', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 400, color: '#2C2C2C', margin: 0 }}
             >
               Moments you&apos;ve saved
             </h2>
@@ -353,7 +353,7 @@ export default async function DashboardPage() {
                       style={{
                         fontSize: '0.95rem',
                         fontWeight: 400,
-                        color: 'var(--cream)',
+                        color: '#2C2C2C',
                         marginBottom: '0.15rem',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
