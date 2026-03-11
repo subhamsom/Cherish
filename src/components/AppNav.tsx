@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Home, Users } from 'lucide-react'
 
 const navLinks = [
-  { href: '/dashboard', label: 'Home', icon: '◎' },
-  { href: '/people', label: 'People', icon: '☺' },
+  { href: '/dashboard', label: 'Home', icon: 'home' as const },
+  { href: '/people', label: 'People', icon: 'people' as const },
   { href: '/entries/new', label: 'New moment', icon: '+', primary: true },
 ]
 
@@ -55,7 +56,7 @@ export default function AppNav() {
               className="serif"
               style={{
                 fontSize: '1.7rem',
-                fontWeight: 400,
+                fontWeight: 600,
                 color: 'var(--terracotta)',
                 letterSpacing: '0.06em',
               }}
@@ -104,16 +105,14 @@ export default function AppNav() {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-                    {link.icon && (
-                      <span
-                        aria-hidden
-                        style={{
-                          fontSize: isPrimary ? '0.9rem' : '0.8rem',
-                          opacity: isPrimary || isActive ? 1 : 0.7,
-                        }}
-                      >
-                        {link.icon}
+                    {link.icon && link.icon !== '+' && (
+                      <span aria-hidden style={{ display: 'flex', opacity: isPrimary || isActive ? 1 : 0.7 }}>
+                        {link.icon === 'home' && <Home size={18} strokeWidth={2} />}
+                        {link.icon === 'people' && <Users size={18} strokeWidth={2} />}
                       </span>
+                    )}
+                    {link.icon === '+' && (
+                      <span aria-hidden style={{ fontSize: '0.9rem', opacity: 1 }}>+</span>
                     )}
                     <span>{link.label}</span>
                   </div>
@@ -194,7 +193,7 @@ export default function AppNav() {
             </p>
             <p
               className="serif"
-              style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--charcoal)' }}
+              style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--charcoal)' }}
             >
               Your people
             </p>

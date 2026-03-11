@@ -39,7 +39,7 @@ export default async function PeoplePage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2rem', fontWeight: 300, color: 'var(--text-primary)', margin: 0 }}
+            style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
           >
             People
           </h1>
@@ -90,14 +90,14 @@ export default async function PeoplePage() {
                     width: '42px',
                     height: '42px',
                     borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
+                    background: '#EDE9FE',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '1.15rem',
-                    color: '#4C1D95',
-                    fontFamily: 'Cormorant Garamond, serif',
+                    color: '#7C3AED',
+                    fontFamily: 'Inter, sans-serif',
                     fontWeight: 600,
                   }}
                 >

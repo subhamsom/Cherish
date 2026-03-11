@@ -13,7 +13,7 @@ export default async function EditPersonPage({ params }: { params: Promise<{ id:
     <div>
       <div style={{ marginBottom: '2rem' }}>
         <p style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '0.3rem' }}>Editing</p>
-        <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 300 }}>{person.name}</h1>
+        <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 600 }}>{person.name}</h1>
       </div>
       <PersonForm person={person} />
     </div>

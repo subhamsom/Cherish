@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Person } from '@/types'
+import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -51,7 +52,7 @@ export default async function DashboardPage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2.1rem', fontWeight: 300, color: 'var(--text-primary)', margin: 0 }}
+            style={{ fontSize: '2.1rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
           >
             Hello, {firstName}
           </h1>
@@ -95,7 +96,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
             >
               Circle of care
             </h2>
@@ -162,13 +163,13 @@ export default async function DashboardPage() {
                         width: '44px',
                         height: '44px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
+                        background: '#EDE9FE',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '1.3rem',
-                        color: '#4C1D95',
-                        fontFamily: 'Cormorant Garamond, serif',
+                        color: '#7C3AED',
+                        fontFamily: 'Inter, sans-serif',
                         fontWeight: 600,
                       }}
                     >
@@ -269,7 +270,7 @@ export default async function DashboardPage() {
             </p>
             <h2
               className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 400, color: 'var(--text-primary)', margin: 0 }}
+              style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
             >
               Moments you&apos;ve saved
             </h2>
@@ -324,15 +325,14 @@ export default async function DashboardPage() {
                         fontSize: '0.65rem',
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
-                        color: 'var(--text-primary)',
-                        background: 'var(--bg-secondary)',
-                        padding: '0.25rem 0.6rem',
-                        borderRadius: '8px',
+                        background: getEntryTypeBadgeStyle(entry.type).background,
+                        color: getEntryTypeBadgeStyle(entry.type).color,
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '6px',
                         whiteSpace: 'nowrap',
-                        border: '1px solid var(--card-border)',
                       }}
                     >
-                      {entry.type.replace('_', ' ')}
+                      {getEntryTypeLabel(entry.type)}
                     </span>
                     <p
                       style={{

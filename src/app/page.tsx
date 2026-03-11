@@ -43,7 +43,7 @@ export default async function LandingPage() {
         </p>
         <h1 className="serif fade-up" style={{
           fontSize: 'clamp(2.5rem, 7vw, 4.5rem)',
-          fontWeight: 300,
+          fontWeight: 600,
           lineHeight: 1.1,
           color: 'var(--charcoal)',
           marginBottom: '1.5rem',

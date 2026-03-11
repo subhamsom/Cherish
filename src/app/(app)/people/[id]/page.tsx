@@ -1,14 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import type { Entry } from '@/types'
-
-const ENTRY_TYPE_LABELS: Record<string, string> = {
-  moment: 'Moment',
-  gift_given: 'Gift given',
-  gift_received: 'Gift received',
-  reminder_note: 'Note',
-}
+import type { Person } from '@/types'
+import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
 
 export default async function PersonProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -27,15 +20,15 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', marginBottom: '2.5rem' }}>
         <div style={{
           width: '64px', height: '64px', borderRadius: '50%', flexShrink: 0,
-          background: 'linear-gradient(135deg, #E9D5FF 0%, #C4B5FD 50%, #A78BFA 100%)',
+          background: '#EDE9FE',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.8rem', color: '#4C1D95',
-          fontFamily: 'Cormorant Garamond, serif', fontWeight: 500,
+          fontSize: '1.8rem', color: '#7C3AED',
+          fontFamily: 'Inter, sans-serif', fontWeight: 600,
         }}>
           {person.name[0].toUpperCase()}
         </div>
         <div style={{ flex: 1 }}>
-          <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 300, marginBottom: '0.2rem' }}>{person.name}</h1>
+          <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 600, marginBottom: '0.2rem' }}>{person.name}</h1>
           <p style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'capitalize', marginBottom: '0.5rem' }}>{person.relationship_type}</p>
           {person.birthday && (
             <p style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
@@ -64,7 +57,7 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
 
       {/* Entries */}
       <section>
-        <h2 className="serif" style={{ fontSize: '1.3rem', fontWeight: 400, marginBottom: '1rem' }}>Entries</h2>
+        <h2 className="serif" style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1rem' }}>Entries</h2>
         {!entries?.length ? (
           <div className="card" style={{ textAlign: 'center', padding: '2.5rem' }}>
             <p style={{ color: 'var(--muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
@@ -79,8 +72,20 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
             {(entries as Entry[]).map((entry) => (
               <Link key={entry.id} href={`/entries/${entry.id}`} style={{ textDecoration: 'none' }}>
                 <div className="card card--clickable" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--accent)', background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', whiteSpace: 'nowrap', marginTop: '0.15rem', border: '1px solid var(--card-border)' }}>
-                    {ENTRY_TYPE_LABELS[entry.type] ?? entry.type}
+                  <span
+                    style={{
+                      fontSize: '0.65rem',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      background: getEntryTypeBadgeStyle(entry.type).background,
+                      color: getEntryTypeBadgeStyle(entry.type).color,
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '6px',
+                      whiteSpace: 'nowrap',
+                      marginTop: '0.15rem',
+                    }}
+                  >
+                    {getEntryTypeLabel(entry.type)}
                   </span>
                   <div style={{ flex: 1 }}>
                     <p style={{ fontSize: '0.9rem', fontWeight: 400, color: 'var(--charcoal)', marginBottom: '0.2rem' }}>{entry.title}</p>

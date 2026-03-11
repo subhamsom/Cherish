@@ -2,13 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import EntryForm from '@/components/entries/EntryForm'
-
-const ENTRY_TYPE_LABELS: Record<string, string> = {
-  moment: 'Moment',
-  gift_given: 'Gift given',
-  gift_received: 'Gift received',
-  reminder_note: 'Note',
-}
+import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
 
 export default async function EntryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -31,11 +25,21 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
           ‹ {(entry as any).people?.name}
         </Link>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--accent)', background: 'var(--bg-secondary)', padding: '0.25rem 0.6rem', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
-            {ENTRY_TYPE_LABELS[(entry as any).type]}
+          <span
+            style={{
+              fontSize: '0.65rem',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              background: getEntryTypeBadgeStyle((entry as any).type).background,
+              color: getEntryTypeBadgeStyle((entry as any).type).color,
+              padding: '0.25rem 0.5rem',
+              borderRadius: '6px',
+            }}
+          >
+            {getEntryTypeLabel((entry as any).type)}
           </span>
         </div>
-        <h1 className="serif" style={{ fontSize: '1.8rem', fontWeight: 300, marginTop: '0.5rem' }}>
+        <h1 className="serif" style={{ fontSize: '1.8rem', fontWeight: 600, marginTop: '0.5rem' }}>
           {entry.title}
         </h1>
       </div>

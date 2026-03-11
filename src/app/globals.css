@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -8,28 +8,28 @@
   --accent: #7C3AED;
   --accent-secondary: #A78BFA;
   --accent-hover: #6D28D9;
-  --text-primary: #1F1F1F;
-  --text-secondary: #6B7280;
-  --card-bg: #FFFFFF;
-  --card-border: #EDE9FE;
+  --text-primary: #2D2D2D;
+  --text-secondary: #4B5563;
+  --card-bg: #F9F8FF;
+  --card-border: #E5E1FF;
 
   /* Aliases for components using old names */
   --canvas-deep: #FFFFFF;
   --canvas: #F5F3FF;
   --cream: #FFFFFF;
   --warm-white: #F5F3FF;
-  --charcoal: #1F1F1F;
-  --charcoal-soft: #6B7280;
-  --charcoal-muted: #6B7280;
-  --charcoal-light: #6B7280;
-  --muted: #6B7280;
+  --charcoal: #2D2D2D;
+  --charcoal-soft: #4B5563;
+  --charcoal-muted: #4B5563;
+  --charcoal-light: #4B5563;
+  --muted: #4B5563;
   --terracotta: #7C3AED;
   --terracotta-light: #A78BFA;
-  --border-subtle: #EDE9FE;
+  --border-subtle: #E5E1FF;
   --border-strong: #DDD6FE;
-  --border: #EDE9FE;
-  --card: #FFFFFF;
-  --card-elevated: #FFFFFF;
+  --border: #E5E1FF;
+  --card: #F9F8FF;
+  --card-elevated: #F9F8FF;
 }
 
 * {
@@ -44,16 +44,17 @@ body {
   min-height: 100vh;
   margin: 0;
   background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 300;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
 }
 
 h1, h2, h3, .serif {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* App shell — more whitespace */
@@ -92,7 +93,7 @@ a:hover {
   color: #FFFFFF;
   padding: 0.75rem 1.75rem;
   border-radius: 12px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -113,7 +114,7 @@ a:hover {
   color: var(--text-secondary);
   padding: 0.65rem 1.5rem;
   border-radius: 12px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -137,7 +138,7 @@ a:hover {
   color: var(--text-primary);
   padding: 0.65rem 1rem;
   border-radius: 12px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -172,7 +173,7 @@ a:hover {
 
 .login-page__logo {
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.02em;
   margin: 0;
@@ -216,7 +217,7 @@ a:hover {
   color: #FFFFFF;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.05rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -248,7 +249,7 @@ a:hover {
   justify-content: center;
 }
 
-/* Cards — clean white, subtle lilac border */
+/* Cards — light lavender-gray fill, visible border */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -259,7 +260,7 @@ a:hover {
 }
 
 .card--subtle {
-  background: var(--bg-secondary);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
 }
 
@@ -280,9 +281,9 @@ a:hover {
   border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 0.75rem 1rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
-  font-weight: 300;
+  font-weight: 400;
   color: var(--text-primary);
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
   outline: none;
