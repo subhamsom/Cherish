@@ -1,19 +1,42 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { Bell } from 'lucide-react'
 
+const PAGE_TITLES: Record<string, string> = {
+  '/dashboard': 'Home',
+  '/people': 'People',
+  '/entries/new': 'New moment',
+}
+
 export default function AppHeader() {
+  const pathname = usePathname()
+  const title = PAGE_TITLES[pathname] ?? 'Cherish'
+
   return (
     <header
+      className="app-header"
       style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: '0.75rem',
+        justifyContent: 'space-between',
+        padding: '0.75rem 0 1rem',
         marginBottom: '0.5rem',
-        minHeight: '32px',
+        borderBottom: '1px solid var(--card-border)',
+        minHeight: '48px',
       }}
     >
+      <h1
+        className="serif"
+        style={{
+          fontSize: '1.25rem',
+          fontWeight: 600,
+          color: 'var(--text-primary)',
+          margin: 0,
+        }}
+      >
+        {title}
+      </h1>
       <button
         type="button"
         aria-label="Notifications"
@@ -21,8 +44,8 @@ export default function AppHeader() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '32px',
-          height: '32px',
+          width: '36px',
+          height: '36px',
           border: 'none',
           background: 'transparent',
           color: 'var(--charcoal-muted)',

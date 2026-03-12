@@ -57,7 +57,7 @@ h1, h2, h3, .serif {
   color: var(--text-primary);
 }
 
-/* App shell — more whitespace */
+/* App shell — sidebar fixed, main content offset */
 .app-shell {
   display: flex;
   min-height: 100vh;
@@ -67,14 +67,22 @@ h1, h2, h3, .serif {
 
 .app-main {
   flex: 1;
+  min-width: 0;
   padding: 2rem 1.5rem 3.5rem;
   max-width: 960px;
   margin: 0 auto;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .app-main {
+    margin-left: 250px;
     padding: 3rem 2.5rem 4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding-top: 4.5rem;
   }
 }
 

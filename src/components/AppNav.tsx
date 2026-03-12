@@ -16,7 +16,7 @@ export default function AppNav() {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
-  const [user, setUser] = useState<{ avatar_url?: string; firstName: string } | null>(null)
+  const [user, setUser] = useState<{ avatar_url?: string; firstName: string; fullName?: string; email?: string } | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
   const [fabOpen, setFabOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -25,9 +25,12 @@ export default function AppNav() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const meta = session.user.user_metadata
+        const fullName = meta?.name || meta?.full_name || ''
         setUser({
           avatar_url: meta?.avatar_url ?? meta?.picture,
-          firstName: meta?.name?.split(' ')[0] || 'Account',
+          firstName: fullName.split(' ')[0] || 'Account',
+          fullName: fullName || undefined,
+          email: session.user.email || undefined,
         })
       }
     })
@@ -50,19 +53,22 @@ export default function AppNav() {
 
   return (
     <>
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar — fixed, does not scroll */}
       <nav
         className="desktop-nav"
         style={{
           width: '250px',
           minHeight: '100vh',
+          height: '100vh',
           borderRight: '1px solid var(--card-border)',
           padding: '2.25rem 1.75rem 2rem',
           display: 'flex',
           flexDirection: 'column',
-          position: 'sticky',
+          position: 'fixed',
           top: 0,
+          left: 0,
           background: 'var(--bg-primary)',
+          zIndex: 10,
         }}
       >
         <Link href="/dashboard" style={{ textDecoration: 'none' }}>
@@ -195,7 +201,7 @@ export default function AppNav() {
               {user?.avatar_url ? (
                 <img src={user.avatar_url} alt="" width={36} height={36} style={{ objectFit: 'cover' }} />
               ) : (
-                (user?.firstName?.[0] ?? '?').toUpperCase()
+                (user?.fullName?.[0] ?? user?.email?.[0] ?? user?.firstName?.[0] ?? '?').toUpperCase()
               )}
             </div>
             <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, textAlign: 'left' }}>
