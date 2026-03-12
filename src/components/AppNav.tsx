@@ -1,22 +1,48 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Home, Users } from 'lucide-react'
+import { Home, Users, ChevronDown } from 'lucide-react'
 
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
   { href: '/people', label: 'People', icon: 'people' as const },
-  { href: '/entries/new', label: 'New moment', icon: '+', primary: true },
+  { href: '/entries/new', label: '+ New Moment', icon: '+', primary: true },
 ]
 
 export default function AppNav() {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
+  const [user, setUser] = useState<{ avatar_url?: string; firstName: string } | null>(null)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [fabOpen, setFabOpen] = useState(false)
+  const profileRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const meta = session.user.user_metadata
+        setUser({
+          avatar_url: meta?.avatar_url ?? meta?.picture,
+          firstName: meta?.name?.split(' ')[0] || 'Account',
+        })
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false)
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [])
 
   async function handleSignOut() {
+    setProfileOpen(false)
     await supabase.auth.signOut()
     router.push('/')
     router.refresh()
@@ -133,30 +159,83 @@ export default function AppNav() {
           })}
         </div>
 
-        <div style={{ marginTop: '1.5rem' }}>
+        <div ref={profileRef} style={{ marginTop: 'auto', position: 'relative' }}>
           <button
             type="button"
-            onClick={handleSignOut}
+            onClick={() => setProfileOpen((o) => !o)}
             style={{
               width: '100%',
               background: 'transparent',
-              borderRadius: 999,
-              border: '1px solid var(--border-subtle)',
-              padding: '0.45rem 0.9rem',
-              fontSize: '0.75rem',
-              color: 'var(--charcoal-muted)',
+              border: 'none',
+              padding: '0.5rem 0',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              gap: '0.6rem',
               cursor: 'pointer',
-              transition: 'all 0.15s ease',
+              borderRadius: '8px',
             }}
           >
-            <span>Sign out</span>
-            <span aria-hidden style={{ fontSize: '0.85rem' }}>
-              ↗
+            <div
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                flexShrink: 0,
+                overflow: 'hidden',
+                background: user?.avatar_url ? 'transparent' : '#EDE9FE',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: user?.avatar_url ? undefined : '#7C3AED',
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+              }}
+            >
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt="" width={36} height={36} style={{ objectFit: 'cover' }} />
+              ) : (
+                (user?.firstName?.[0] ?? '?').toUpperCase()
+              )}
+            </div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, textAlign: 'left' }}>
+              {user?.firstName ?? '…'}
             </span>
+            <ChevronDown size={14} style={{ color: 'var(--charcoal-muted)', flexShrink: 0 }} />
           </button>
+          {profileOpen && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '100%',
+                left: 0,
+                right: 0,
+                marginBottom: '0.25rem',
+                background: 'var(--card-bg)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                overflow: 'hidden',
+              }}
+            >
+              <button
+                type="button"
+                onClick={handleSignOut}
+                style={{
+                  width: '100%',
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '0.8rem',
+                  color: 'var(--charcoal-soft)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+              >
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -231,49 +310,81 @@ export default function AppNav() {
         </div>
       </nav>
 
-      {/* Mobile floating add button */}
-      <Link href="/entries/new" className="mobile-nav" style={{ textDecoration: 'none' }}>
-        <button
-          type="button"
+      {/* Mobile floating action button — expandable */}
+      <div className="mobile-nav" style={{ position: 'fixed', right: '1.25rem', bottom: '1.6rem', zIndex: 90 }}>
+        {fabOpen && (
+          <div
             style={{
-              position: 'fixed',
-              right: '1.25rem',
-              bottom: '1.6rem',
-              zIndex: 90,
-              padding: '0.85rem 1.1rem',
-              borderRadius: 12,
-              border: 'none',
-              background: 'var(--accent)',
-              color: '#FFFFFF',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
+              position: 'absolute',
+              bottom: '100%',
+              right: 0,
+              marginBottom: '0.5rem',
               display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              boxShadow: '0 4px 14px rgba(124, 58, 237, 0.4)',
-            }}
-        >
-          <span
-            aria-hidden
-            style={{
-              width: '22px',
-              height: '22px',
-              borderRadius: '999px',
-              background: 'rgba(255,255,255,0.3)',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1rem',
+              flexDirection: 'column',
+              gap: '0.4rem',
+              alignItems: 'flex-end',
             }}
           >
-            +
-          </span>
-          New entry
+            <Link href="/entries/new" style={{ textDecoration: 'none' }} onClick={() => setFabOpen(false)}>
+              <button
+                type="button"
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: 999,
+                  border: '1px solid var(--card-border)',
+                  background: '#FFFFFF',
+                  color: 'var(--accent)',
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                ✨ New Moment
+              </button>
+            </Link>
+            <Link href="/people/new" style={{ textDecoration: 'none' }} onClick={() => setFabOpen(false)}>
+              <button
+                type="button"
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: 999,
+                  border: '1px solid var(--card-border)',
+                  background: '#FFFFFF',
+                  color: 'var(--accent)',
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                👤 Add Person
+              </button>
+            </Link>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={() => setFabOpen((o) => !o)}
+          style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '50%',
+            border: 'none',
+            background: 'var(--accent)',
+            color: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 14px rgba(124, 58, 237, 0.4)',
+            fontSize: '1.5rem',
+            fontWeight: 300,
+            cursor: 'pointer',
+          }}
+        >
+          +
         </button>
-      </Link>
+      </div>
 
       <style>{`
         .desktop-nav .nav-link {

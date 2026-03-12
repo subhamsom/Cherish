@@ -22,6 +22,9 @@ export default async function DashboardPage() {
   if (entriesError) console.error('[Dashboard] entries query error:', entriesError.message, entriesError.details)
 
   const firstName = user?.user_metadata?.name?.split(' ')[0] || 'there'
+  const PEOPLE_DISPLAY_LIMIT = 4
+  const peopleToShow = people?.length ? (people as Person[]).slice(0, PEOPLE_DISPLAY_LIMIT) : []
+  const hasMorePeople = (people?.length ?? 0) > PEOPLE_DISPLAY_LIMIT
 
   return (
     <div style={{ paddingBottom: '5rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
@@ -62,7 +65,7 @@ export default async function DashboardPage() {
           </p>
           <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <Link href="/entries/new">
-              <button className="btn-primary">Capture a moment</button>
+              <button className="btn-primary">+ New Moment</button>
             </Link>
             <Link href="/people/new">
               <button className="btn-secondary">Add someone new</button>
@@ -137,7 +140,7 @@ export default async function DashboardPage() {
               gap: '0.9rem',
             }}
           >
-            {(people as Person[]).map((person) => (
+            {peopleToShow.map((person) => (
               <Link key={person.id} href={`/people/${person.id}`} style={{ textDecoration: 'none' }}>
                 <div
                   className="card card--clickable"
@@ -207,6 +210,27 @@ export default async function DashboardPage() {
                 </div>
               </Link>
             ))}
+            {hasMorePeople && (
+              <Link href="/people" style={{ textDecoration: 'none' }}>
+                <div
+                  className="card card--clickable"
+                  style={{
+                    padding: '1.1rem 1.1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid var(--card-border)',
+                    background: 'var(--bg-secondary)',
+                  }}
+                >
+                  <p style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--accent)' }}>View all</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--charcoal-soft)' }}>
+                    {(people?.length ?? 0) - PEOPLE_DISPLAY_LIMIT} more
+                  </p>
+                </div>
+              </Link>
+            )}
             <Link href="/people/new" style={{ textDecoration: 'none' }}>
               <div
                 className="card card--clickable"
@@ -248,36 +272,24 @@ export default async function DashboardPage() {
 
       {/* Recent entries */}
       <section>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: '1.1rem',
-          }}
-        >
-          <div>
-            <p
-              style={{
-                fontSize: '0.7rem',
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                color: 'var(--charcoal-muted)',
-                marginBottom: '0.2rem',
-              }}
-            >
-              Recent activity
-            </p>
-            <h2
-              className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
-            >
-              Moments you&apos;ve saved
-            </h2>
-          </div>
-          <Link href="/entries/new" style={{ textDecoration: 'none' }}>
-            <button className="btn-secondary">+ New entry</button>
-          </Link>
+        <div style={{ marginBottom: '1.1rem' }}>
+          <p
+            style={{
+              fontSize: '0.7rem',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: 'var(--charcoal-muted)',
+              marginBottom: '0.2rem',
+            }}
+          >
+            Recent activity
+          </p>
+          <h2
+            className="serif"
+            style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
+          >
+            Moments you&apos;ve saved
+          </h2>
         </div>
 
         {!entries?.length ? (

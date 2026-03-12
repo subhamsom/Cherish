@@ -303,6 +303,13 @@ input[type="date"] {
   color: var(--text-secondary);
 }
 
+/* Person/select dropdown — theme match */
+.input-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  outline: none;
+}
+
 .label {
   display: block;
   font-size: 0.75rem;

@@ -1,18 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Sparkles, Gift, FileText } from 'lucide-react'
 import type { Person, EntryType } from '@/types'
 
-const ENTRY_TYPES: { value: EntryType; label: string; desc: string }[] = [
-  { value: 'moment', label: 'Moment', desc: 'A story, memory, or something meaningful' },
-  { value: 'gift_given', label: 'Gift given', desc: 'A gift you gave them' },
-  { value: 'gift_received', label: 'Gift received', desc: 'A gift they gave you' },
-  { value: 'reminder_note', label: 'Note', desc: 'Something to remember or follow up on' },
+const ENTRY_TYPES: { value: EntryType; label: string; desc: string; placeholder: string }[] = [
+  { value: 'moment', label: 'Moment', desc: 'A story, memory, or something meaningful', placeholder: 'What happened?' },
+  { value: 'gift_given', label: 'Gift given', desc: 'A gift you gave them', placeholder: 'What did you give?' },
+  { value: 'gift_received', label: 'Gift received', desc: 'A gift they gave you', placeholder: 'What did you receive?' },
+  { value: 'reminder_note', label: 'Note', desc: 'Something to remember or follow up on', placeholder: "What's on your mind?" },
 ]
-
-const MOODS = ['😊', '🥰', '😂', '🥺', '😮', '💛', '✨', '🌸', '🙏', '💭']
 
 interface EntryFormProps {
   defaultPersonId?: string
@@ -30,7 +29,7 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
   const [body, setBody] = useState(entry?.body ?? '')
   const [date, setDate] = useState(entry?.date || new Date().toISOString().split('T')[0])
   const [tags, setTags] = useState<string>(entry?.tags?.join(', ') || '')
-  const [mood, setMood] = useState(entry?.mood || '')
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -57,7 +56,7 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
       body: body.trim() || null,
       date,
       tags: tagsArray,
-      mood: mood || null,
+      mood: entry?.mood ?? null,
     }
 
     if (entry) {
@@ -81,12 +80,22 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
         <div>
           <label className="label" htmlFor="person">Person *</label>
           <select
-            className="input"
             id="person"
             value={personId}
             onChange={e => setPersonId(e.target.value)}
             required
-            style={{ appearance: 'auto' }}
+            className="input input-select"
+            style={{
+              appearance: 'none',
+              WebkitAppearance: 'none',
+              background: '#FFFFFF',
+              borderRadius: '8px',
+              border: '1px solid var(--card-border)',
+              padding: '0.75rem 1rem',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '0.9rem',
+              color: 'var(--text-primary)',
+            }}
           >
             <option value="">Select a person…</option>
             {people.map(p => (
@@ -113,14 +122,23 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
                   textAlign: 'left',
                   cursor: 'pointer',
                   display: 'flex',
-                  alignItems: 'baseline',
-                  gap: '0.5rem',
+                  alignItems: 'center',
+                  gap: '0.6rem',
                 }}
               >
-                <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 300, color: type === t.value ? 'var(--accent)' : 'var(--text-primary)' }}>
-                  {t.label}
+                <span style={{ display: 'flex', flexShrink: 0, color: type === t.value ? 'var(--accent)' : 'var(--charcoal-muted)' }}>
+                  {t.value === 'moment' && <Sparkles size={16} />}
+                  {t.value === 'gift_given' && <Gift size={16} />}
+                  {t.value === 'gift_received' && <Gift size={16} />}
+                  {t.value === 'reminder_note' && <FileText size={16} />}
                 </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{t.desc}</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 400, color: type === t.value ? 'var(--accent)' : 'var(--text-primary)' }}>
+                  {t.label}
+                  {t.value === 'gift_received' && (
+                    <span style={{ fontSize: '0.75rem', color: 'var(--muted)', fontWeight: 400, marginLeft: '0.25rem' }}> (received)</span>
+                  )}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--muted)', flex: 1, minWidth: 0 }}>{t.desc}</span>
               </button>
             ))}
           </div>
@@ -129,7 +147,14 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
         {/* Title */}
         <div>
           <label className="label" htmlFor="title">Title *</label>
-          <input className="input" id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder="A short description…" required />
+          <input
+            className="input"
+            id="title"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder={ENTRY_TYPES.find(t => t.value === type)?.placeholder ?? 'A short description…'}
+            required
+          />
         </div>
 
         {/* Body */}
@@ -145,42 +170,88 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
 
         {/* Date */}
         <div>
-          <label className="label" htmlFor="date">Date</label>
-          <input
-            type="date"
-            id="date"
-            className="input"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            max={new Date().toISOString().split('T')[0]}
-          />
+          <label className="label">Date</label>
+          {(() => {
+            const today = new Date().toISOString().split('T')[0]
+            const yesterday = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().split('T')[0] })()
+            const isToday = date === today
+            const isYesterday = date === yesterday
+            const isCustom = !isToday && !isYesterday
+            return (
+              <>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setDate(today); setDatePickerOpen(false) }}
+                    style={{
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: isToday ? 'var(--accent)' : 'var(--card-border)',
+                      background: isToday ? '#EDE9FE' : 'transparent',
+                      fontSize: '0.8rem',
+                      color: isToday ? 'var(--accent)' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      fontFamily: 'Inter, sans-serif',
+                    }}
+                  >
+                    Today
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setDate(yesterday); setDatePickerOpen(false) }}
+                    style={{
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: isYesterday ? 'var(--accent)' : 'var(--card-border)',
+                      background: isYesterday ? '#EDE9FE' : 'transparent',
+                      fontSize: '0.8rem',
+                      color: isYesterday ? 'var(--accent)' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      fontFamily: 'Inter, sans-serif',
+                    }}
+                  >
+                    Yesterday
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDatePickerOpen(true)}
+                    style={{
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: isCustom || datePickerOpen ? 'var(--accent)' : 'var(--card-border)',
+                      background: isCustom || datePickerOpen ? '#EDE9FE' : 'transparent',
+                      fontSize: '0.8rem',
+                      color: isCustom || datePickerOpen ? 'var(--accent)' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      fontFamily: 'Inter, sans-serif',
+                    }}
+                  >
+                    Pick a date
+                  </button>
+                </div>
+                {(datePickerOpen || isCustom) && (
+                  <input
+                    type="date"
+                    id="date"
+                    className="input"
+                    value={date}
+                    onChange={e => setDate(e.target.value)}
+                    max={new Date().toISOString().split('T')[0]}
+                    style={{ marginTop: '0.5rem' }}
+                  />
+                )}
+              </>
+            )
+          })()}
         </div>
 
         {/* Tags */}
         <div>
           <label className="label" htmlFor="tags">Tags (comma-separated, optional)</label>
           <input className="input" id="tags" value={tags} onChange={e => setTags(e.target.value)} placeholder="travel, birthday, food…" />
-        </div>
-
-        {/* Mood */}
-        <div>
-          <label className="label">Mood / reaction (optional)</label>
-          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            {MOODS.map(m => (
-              <button
-                key={m} type="button" onClick={() => setMood(mood === m ? '' : m)}
-                style={{
-                  width: '36px', height: '36px', fontSize: '1.2rem',
-                  borderRadius: '8px', border: '1px solid',
-                  borderColor: mood === m ? 'var(--accent)' : 'var(--card-border)',
-                  background: mood === m ? 'var(--bg-secondary)' : 'transparent',
-                  cursor: 'pointer',
-                }}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
         </div>
 
         {error && <p style={{ fontSize: '0.8rem', color: '#C0392B' }}>{error}</p>}
