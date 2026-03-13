@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Person } from '@/types'
 import type { Entry } from '@/types'
+import Select from '@/components/ui/Select'
+import DatePicker from '@/components/ui/DatePicker'
 
 const REPEAT_OPTIONS = [
   { value: 'none', label: 'None' },
@@ -19,16 +21,16 @@ const CHANNEL_OPTIONS = [
   { value: 'both', label: 'Both' },
 ] as const
 
-function getDefaultDateTime(): string {
+function getDefaultDateTime() {
   const d = new Date()
   d.setDate(d.getDate() + 1)
   d.setHours(9, 0, 0, 0)
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const hours = String(d.getHours()).padStart(2, '0')
-  const minutes = String(d.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
+  return {
+    date: d,
+    hour: '9',
+    minute: '00',
+    period: 'AM' as 'AM' | 'PM',
+  }
 }
 
 export default function ReminderForm() {
@@ -39,7 +41,11 @@ export default function ReminderForm() {
   const [entries, setEntries] = useState<Pick<Entry, 'id' | 'title' | 'date'>[]>([])
   const [title, setTitle] = useState('')
   const [personId, setPersonId] = useState('')
-  const [remindAt, setRemindAt] = useState(getDefaultDateTime())
+  const defaultDateTime = getDefaultDateTime()
+  const [remindDate, setRemindDate] = useState<Date | null>(defaultDateTime.date)
+  const [remindHour, setRemindHour] = useState<string>(defaultDateTime.hour)
+  const [remindMinute, setRemindMinute] = useState<string>(defaultDateTime.minute)
+  const [remindPeriod, setRemindPeriod] = useState<'AM' | 'PM'>(defaultDateTime.period)
   const [repeat, setRepeat] = useState<'none' | 'weekly' | 'monthly' | 'yearly'>('none')
   const [channel, setChannel] = useState<'email' | 'in_app' | 'both'>('email')
   const [entryId, setEntryId] = useState('')
@@ -85,12 +91,40 @@ export default function ReminderForm() {
       return
     }
 
+    if (!remindDate) {
+      setError('Please choose a date.')
+      setLoading(false)
+      return
+    }
+
+    const hourNum = parseInt(remindHour, 10)
+    const minuteNum = parseInt(remindMinute, 10)
+    if (
+      Number.isNaN(hourNum) ||
+      Number.isNaN(minuteNum) ||
+      hourNum < 1 ||
+      hourNum > 12 ||
+      !['00', '15', '30', '45'].includes(remindMinute)
+    ) {
+      setError('Please choose a valid time.')
+      setLoading(false)
+      return
+    }
+
+    let hours24 = hourNum % 12
+    if (remindPeriod === 'PM') {
+      hours24 += 12
+    }
+
+    const remindAtDate = new Date(remindDate)
+    remindAtDate.setHours(hours24, minuteNum, 0, 0)
+
     const payload = {
       user_id: user.id,
       person_id: personId,
       entry_id: entryId || null,
       title: title.trim(),
-      remind_at: new Date(remindAt).toISOString(),
+      remind_at: remindAtDate.toISOString(),
       repeat,
       channel,
       is_sent: false,
@@ -116,12 +150,6 @@ export default function ReminderForm() {
     fontSize: '0.9rem',
     color: 'var(--text-primary)',
   } as const
-
-  const selectStyle = {
-    ...inputStyle,
-    appearance: 'none' as const,
-    WebkitAppearance: 'none' as const,
-  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -157,95 +185,126 @@ export default function ReminderForm() {
           <label className="label" htmlFor="person">
             Person *
           </label>
-          <select
-            id="person"
+          <Select
+            options={people.map((p) => ({
+              value: p.id,
+              label: p.name,
+            }))}
             value={personId}
-            onChange={(e) => setPersonId(e.target.value)}
-            required
-            className="input input-select"
-            style={selectStyle}
-          >
-            <option value="">Select a person…</option>
-            {people.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+            onChange={setPersonId}
+            placeholder="Select a person…"
+          />
         </div>
 
         <div>
-          <label className="label" htmlFor="remind_at">
-            Date & time *
-          </label>
-          <input
-            id="remind_at"
-            type="datetime-local"
-            value={remindAt}
-            onChange={(e) => setRemindAt(e.target.value)}
-            required
-            className="input"
-            style={inputStyle}
-          />
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              alignItems: 'flex-start',
+            }}
+          >
+            <div style={{ flex: '1 1 220px', minWidth: '220px', maxWidth: '100%' }}>
+              <label className="label" htmlFor="remind_date">
+                DATE
+              </label>
+              <DatePicker
+                value={remindDate}
+                onChange={setRemindDate}
+                minDate={new Date()}
+                placeholder="Select date…"
+              />
+            </div>
+            <div style={{ flex: '1 1 200px', minWidth: '200px', maxWidth: '100%' }}>
+              <label className="label" htmlFor="remind_time">
+                TIME
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  flexWrap: 'nowrap',
+                }}
+              >
+                <Select
+                  options={Array.from({ length: 12 }, (_, i) => {
+                    const h = i + 1
+                    return { value: String(h), label: String(h) }
+                  })}
+                  value={remindHour}
+                  onChange={setRemindHour}
+                  width={64}
+                />
+                <span style={{ fontSize: '0.9rem', color: '#1F1F1F' }}>:</span>
+                <Select
+                  options={['00', '15', '30', '45'].map((m) => ({
+                    value: m,
+                    label: m,
+                  }))}
+                  value={remindMinute}
+                  onChange={setRemindMinute}
+                  width={64}
+                />
+                <Select
+                  options={[
+                    { value: 'AM', label: 'AM' },
+                    { value: 'PM', label: 'PM' },
+                  ]}
+                  value={remindPeriod}
+                  onChange={(val) => setRemindPeriod(val as 'AM' | 'PM')}
+                  width={72}
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div>
           <label className="label" htmlFor="repeat">
             Repeat
           </label>
-          <select
-            id="repeat"
+          <Select
+            options={REPEAT_OPTIONS.map((opt) => ({
+              value: opt.value,
+              label: opt.label,
+            }))}
             value={repeat}
-            onChange={(e) => setRepeat(e.target.value as typeof repeat)}
-            className="input input-select"
-            style={selectStyle}
-          >
-            {REPEAT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setRepeat(val as typeof repeat)}
+          />
         </div>
 
         <div>
           <label className="label" htmlFor="channel">
             Channel
           </label>
-          <select
-            id="channel"
+          <Select
+            options={CHANNEL_OPTIONS.map((opt) => ({
+              value: opt.value,
+              label: opt.label,
+            }))}
             value={channel}
-            onChange={(e) => setChannel(e.target.value as typeof channel)}
-            className="input input-select"
-            style={selectStyle}
-          >
-            {CHANNEL_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setChannel(val as typeof channel)}
+          />
         </div>
 
         <div>
           <label className="label" htmlFor="entry">
             Link to entry (optional)
           </label>
-          <select
-            id="entry"
+          <Select
+            options={[
+              { value: '', label: 'None' },
+              ...entries.map((entry) => ({
+                value: entry.id,
+                label: `${entry.title}${entry.date ? ` — ${entry.date}` : ''}`,
+              })),
+            ]}
             value={entryId}
-            onChange={(e) => setEntryId(e.target.value)}
-            className="input input-select"
-            style={selectStyle}
+            onChange={setEntryId}
             disabled={!personId}
-          >
-            <option value="">None</option>
-            {entries.map((entry) => (
-              <option key={entry.id} value={entry.id}>
-                {entry.title} {entry.date ? `— ${entry.date}` : ''}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         {error && (
@@ -257,7 +316,7 @@ export default function ReminderForm() {
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <button
             type="submit"
-            disabled={loading || !title.trim() || !personId || !remindAt}
+            disabled={loading || !title.trim() || !personId || !remindDate}
             style={{
               background: 'var(--accent)',
               color: '#FFFFFF',

@@ -303,13 +303,72 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
 }
 
-input[type="date"] {
+.input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Native form controls — theme (select, date, time, datetime-local) */
+select,
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #F9F8FF;
+  border: 1px solid #E5E1FF;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #1F1F1F;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237C3AED' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+input[type="date"],
+input[type="datetime-local"] {
   accent-color: var(--accent);
   color-scheme: light;
 }
 
-.input::placeholder {
-  color: var(--text-secondary);
+select:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+select option {
+  background-color: #ffffff;
+  color: #1F1F1F;
+}
+
+/* Text inputs and textareas — same base theme */
+input[type="text"],
+input[type="email"],
+textarea {
+  background-color: #F9F8FF;
+  border: 1px solid #E5E1FF;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #1F1F1F;
+  width: 100%;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 /* Person/select dropdown — theme match */
@@ -347,4 +406,47 @@ input[type="date"] {
 
 .fade-up {
   animation: fadeUp 0.4s ease forwards;
+}
+
+/* DatePicker (react-day-picker) — themed panel */
+.rdp-datepicker-panel .rdp {
+  --rdp-accent-color: #ffffff;
+  --rdp-accent-background-color: #7C3AED;
+  --rdp-today-color: #1F1F1F;
+  --rdp-disabled-opacity: 0.5;
+  font-family: 'Inter', sans-serif;
+}
+
+.rdp-datepicker-panel .rdp-day_button[data-selected] {
+  background-color: #7C3AED !important;
+  color: #ffffff !important;
+}
+
+.rdp-datepicker-panel .rdp-day_today:not([data-selected]) {
+  background-color: #E5E1FF;
+}
+
+.rdp-datepicker-panel .rdp-day_button:disabled,
+.rdp-datepicker-panel .rdp-day[aria-disabled="true"] .rdp-day_button {
+  color: #747a84 !important;
+  opacity: 0.6;
+}
+
+/* Month/year dropdowns in calendar header */
+.rdp-datepicker-panel .rdp select,
+.rdp-datepicker-panel select {
+  background: #F9F8FF !important;
+  border: 1px solid #E5E1FF !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  color: #7C3AED !important;
+  outline: none;
+  cursor: pointer;
+}
+
+.rdp-datepicker-panel .rdp select:focus,
+.rdp-datepicker-panel select:focus {
+  border-color: #7C3AED !important;
 }

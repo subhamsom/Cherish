@@ -9,8 +9,8 @@ import { Home, Users, CalendarClock, ChevronDown } from 'lucide-react'
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
   { href: '/people', label: 'People', icon: 'people' as const },
-  { href: '/entries/new', label: 'New Moment', icon: '+', primary: true },
   { href: '/reminders', label: 'Reminders', icon: 'reminders' as const },
+  { href: '/entries/new', label: 'New Moment', icon: '+', primary: true },
 ]
 
 export default function AppNav() {

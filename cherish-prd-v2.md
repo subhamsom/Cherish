@@ -41,7 +41,7 @@ The app sits at the intersection of a personal journal, a relationship CRM, and 
 - **Card border:** #E5E1FF
 - **Text primary:** #1F1F1F
 - **Text secondary:** #6B7280
-- **Text muted:** #9CA3AF
+- **Text muted:** ##747a84
 - **Heading font:** Cormorant Garamond, weight 600–700, sized ~25% larger than equivalent Inter to compensate for optical size
 - **Body font:** Inter, weight 400–500
 - **Border radius:** 8–12px on cards, 50px on primary pill buttons
