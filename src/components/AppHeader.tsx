@@ -17,6 +17,9 @@ export default function AppHeader() {
     <header
       className="app-header"
       style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 20,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -24,6 +27,7 @@ export default function AppHeader() {
         marginBottom: '0.5rem',
         borderBottom: '1px solid var(--card-border)',
         minHeight: '48px',
+        background: 'var(--bg-primary)',
       }}
     >
       <h1

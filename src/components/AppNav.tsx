@@ -25,9 +25,10 @@ export default function AppNav() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const meta = session.user.user_metadata
+        const avatarUrl = meta?.avatar_url || meta?.picture
         const fullName = meta?.name || meta?.full_name || ''
         setUser({
-          avatar_url: meta?.avatar_url ?? meta?.picture,
+          avatar_url: avatarUrl,
           firstName: fullName.split(' ')[0] || 'Account',
           fullName: fullName || undefined,
           email: session.user.email || undefined,
