@@ -383,7 +383,7 @@ export default async function DashboardPage() {
                         fontSize: '0.95rem',
                         fontWeight: 400,
                         color: 'var(--text-primary)',
-                        marginBottom: '0.15rem',
+                        marginBottom: entry.body ? '0.25rem' : 0,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         display: '-webkit-box',
@@ -393,6 +393,24 @@ export default async function DashboardPage() {
                     >
                       {entry.title}
                     </p>
+                    {(() => {
+                      const firstLine = (entry.body || '').trim().split(/\n/)[0]?.trim()
+                      return firstLine ? (
+                        <p
+                          style={{
+                            fontFamily: 'Inter, sans-serif',
+                            fontSize: '13px',
+                            color: '#747a84',
+                            margin: 0,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {firstLine}
+                        </p>
+                      ) : null
+                    })()}
                   </div>
                   {entry.mood && (
                     <span style={{ fontSize: '1.2rem', marginLeft: '0.25rem' }}>{entry.mood}</span>
