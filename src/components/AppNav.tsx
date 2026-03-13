@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Home, Users, ChevronDown } from 'lucide-react'
+import { Home, Users, CalendarClock, ChevronDown } from 'lucide-react'
 
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
   { href: '/people', label: 'People', icon: 'people' as const },
   { href: '/entries/new', label: 'New Moment', icon: '+', primary: true },
+  { href: '/reminders', label: 'Reminders', icon: 'reminders' as const },
 ]
 
 export default function AppNav() {
@@ -130,6 +131,7 @@ export default function AppNav() {
                       <span aria-hidden style={{ display: 'flex', opacity: isPrimary || isActive ? 1 : 0.7 }}>
                         {link.icon === 'home' && <Home size={18} strokeWidth={2} />}
                         {link.icon === 'people' && <Users size={18} strokeWidth={2} />}
+                        {link.icon === 'reminders' && <CalendarClock size={18} strokeWidth={2} />}
                       </span>
                     )}
                     {link.icon === '+' && isPrimary && (
