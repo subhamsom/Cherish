@@ -9,7 +9,7 @@ import { Home, Users, ChevronDown } from 'lucide-react'
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
   { href: '/people', label: 'People', icon: 'people' as const },
-  { href: '/entries/new', label: '+ New Moment', icon: '+', primary: true },
+  { href: '/entries/new', label: 'New Moment', icon: '+', primary: true },
 ]
 
 export default function AppNav() {
@@ -74,28 +74,16 @@ export default function AppNav() {
       >
         <Link href="/dashboard" style={{ textDecoration: 'none' }}>
           <div style={{ marginBottom: '2.75rem' }}>
-            <p
+            <span
               style={{
-                fontSize: '0.7rem',
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
-                color: 'var(--charcoal-muted)',
-                marginBottom: '0.45rem',
-              }}
-            >
-              Daily ritual
-            </p>
-            <h2
-              className="serif"
-              style={{
-                fontSize: '1.7rem',
+                fontFamily: "'Playfair Display', serif",
+                fontSize: '40px',
                 fontWeight: 600,
-                color: 'var(--terracotta)',
-                letterSpacing: '0.06em',
+                color: '#7C3AED',
               }}
             >
               Cherish
-            </h2>
+            </span>
           </div>
         </Link>
 
@@ -144,7 +132,7 @@ export default function AppNav() {
                         {link.icon === 'people' && <Users size={18} strokeWidth={2} />}
                       </span>
                     )}
-                    {link.icon === '+' && (
+                    {link.icon === '+' && isPrimary && (
                       <span aria-hidden style={{ fontSize: '0.9rem', opacity: 1 }}>+</span>
                     )}
                     <span>{link.label}</span>
@@ -279,7 +267,7 @@ export default function AppNav() {
             </p>
             <p
               className="serif"
-              style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--charcoal)' }}
+              style={{ fontSize: '1.375rem', fontWeight: 600, color: 'var(--charcoal)' }}
             >
               Your people
             </p>

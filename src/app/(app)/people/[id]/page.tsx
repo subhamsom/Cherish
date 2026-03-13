@@ -28,7 +28,7 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
           {person.name[0].toUpperCase()}
         </div>
         <div style={{ flex: 1 }}>
-          <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 600, marginBottom: '0.2rem' }}>{person.name}</h1>
+          <h1 className="serif" style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.2rem' }}>{person.name}</h1>
           <p style={{ fontSize: '0.8rem', color: 'var(--muted)', textTransform: 'capitalize', marginBottom: '0.5rem' }}>{person.relationship_type}</p>
           {person.birthday && (
             <p style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
@@ -57,7 +57,7 @@ export default async function PersonProfilePage({ params }: { params: Promise<{ 
 
       {/* Entries */}
       <section>
-        <h2 className="serif" style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1rem' }}>Entries</h2>
+        <h2 className="serif" style={{ fontSize: '1.625rem', fontWeight: 700, marginBottom: '1rem' }}>Entries</h2>
         {!entries?.length ? (
           <div className="card" style={{ textAlign: 'center', padding: '2.5rem' }}>
             <p style={{ color: 'var(--muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>

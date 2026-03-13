@@ -11,7 +11,7 @@ export default async function NewEntryPage({
     <div>
       <div style={{ marginBottom: '2rem' }}>
         <p style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '0.3rem' }}>New moment</p>
-        <h1 className="serif" style={{ fontSize: '2rem', fontWeight: 600 }}>Capture a moment</h1>
+        <h1 className="serif" style={{ fontSize: '2.5rem', fontWeight: 700 }}>Capture a moment</h1>
       </div>
       <EntryForm defaultPersonId={person_id} />
     </div>

@@ -28,20 +28,64 @@ export default function LoginPage() {
 
   return (
     <main className="login-page">
-      <div className="login-page__inner">
-        <header className="login-page__header">
-          <h1 className="serif login-page__logo">Cherish</h1>
+      <div
+        className="login-page__card"
+        style={{
+          background: '#F5F3FF',
+          borderRadius: '20px',
+          padding: '48px',
+          maxWidth: '400px',
+          width: '100%',
+          textAlign: 'center',
+        }}
+      >
+        <header className="login-page__header" style={{ marginBottom: '1.5rem' }}>
+          <div
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: '40px',
+              fontWeight: 600,
+              color: '#7C3AED',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Cherish
+          </div>
+          <p
+            style={{
+              fontFamily: 'Inter, sans-serif',
+              fontStyle: 'italic',
+              fontSize: '18px',
+              color: '#4B5563',
+              margin: 0,
+            }}
+          >
+            Remember what matters
+          </p>
         </header>
 
-        <section className="login-page__hero">
-          <p className="login-page__tagline">
-            A private space to remember the little things — stories shared, moments that meant something.
-          </p>
+        <section className="login-page__hero" style={{ marginBottom: '1.5rem' }}>
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="btn-google-hero"
+            className="btn-google-signin"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.6rem',
+              width: '100%',
+              background: '#FFFFFF',
+              border: '1.5px solid #7C3AED',
+              color: '#7C3AED',
+              borderRadius: '50px',
+              padding: '14px 32px',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: '0.95rem',
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
           >
             <span className="btn-google-hero__icon" aria-hidden>
               <GoogleIcon />
@@ -51,11 +95,17 @@ export default function LoginPage() {
           {error && (
             <p className="login-page__error">{error}</p>
           )}
+          <p
+            style={{
+              fontSize: '12px',
+              color: '#9CA3AF',
+              marginTop: '1.25rem',
+              marginBottom: 0,
+            }}
+          >
+            Your memories are private and secure.
+          </p>
         </section>
-
-        <footer className="login-page__footer">
-          <p>Sign in or create an account with one tap.</p>
-        </footer>
       </div>
     </main>
   )

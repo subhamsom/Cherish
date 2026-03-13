@@ -54,8 +54,8 @@ export default async function DashboardPage() {
             })}
           </p>
           <h1
-            className="serif"
-            style={{ fontSize: '2.1rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
+            className="heading-serif"
+            style={{ fontSize: '2.625rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
           >
             Hello, {firstName}
           </h1>
@@ -63,9 +63,24 @@ export default async function DashboardPage() {
             Take a moment to remember someone you care about. The little details you capture
             today become tomorrow&apos;s favorite stories.
           </p>
-          <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
             <Link href="/entries/new">
-              <button className="btn-primary">+ New Moment</button>
+              <button
+                type="button"
+                style={{
+                  background: '#7C3AED',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '10px 20px',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                }}
+              >
+                Capture a moment
+              </button>
             </Link>
             <Link href="/people/new">
               <button className="btn-secondary">Add someone new</button>
@@ -98,8 +113,8 @@ export default async function DashboardPage() {
               Your people
             </p>
             <h2
-              className="serif"
-              style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
+              className="heading-serif"
+              style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
             >
               Circle of care
             </h2>
@@ -113,7 +128,7 @@ export default async function DashboardPage() {
           <div className="card card--subtle" style={{ textAlign: 'left', padding: '2.2rem' }}>
             <p
               className="serif"
-              style={{ fontSize: '1.3rem', color: 'var(--text-primary)', marginBottom: '0.75rem' }}
+              style={{ fontSize: '1.625rem', color: 'var(--text-primary)', marginBottom: '0.75rem' }}
             >
               Who lights up your world?
             </p>
@@ -284,12 +299,12 @@ export default async function DashboardPage() {
           >
             Recent activity
           </p>
-          <h2
-            className="serif"
-            style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
-          >
-            Moments you&apos;ve saved
-          </h2>
+            <h2
+              className="heading-serif"
+              style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
+            >
+              Moments you&apos;ve saved
+            </h2>
         </div>
 
         {!entries?.length ? (

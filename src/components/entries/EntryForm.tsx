@@ -134,9 +134,6 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
                 </span>
                 <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 400, color: type === t.value ? 'var(--accent)' : 'var(--text-primary)' }}>
                   {t.label}
-                  {t.value === 'gift_received' && (
-                    <span style={{ fontSize: '0.75rem', color: 'var(--muted)', fontWeight: 400, marginLeft: '0.25rem' }}> (received)</span>
-                  )}
                 </span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--muted)', flex: 1, minWidth: 0 }}>{t.desc}</span>
               </button>

@@ -8,15 +8,20 @@ export default async function LandingPage() {
   if (user) redirect('/dashboard')
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Nav */}
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#FAFAFA' }}>
+      {/* Nav — no Sign in, just space for balance */}
       <nav style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span className="serif" style={{ fontSize: '1.5rem', fontWeight: 400, color: 'var(--terracotta)' }}>
+        <span
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: '40px',
+            fontWeight: 600,
+            color: '#7C3AED',
+          }}
+        >
           Cherish
         </span>
-        <Link href="/login">
-          <button className="btn-secondary" style={{ fontSize: '0.8rem' }}>Sign in</button>
-        </Link>
+        <span style={{ width: 1, height: 1 }} aria-hidden />
       </nav>
 
       {/* Hero */}
@@ -32,42 +37,57 @@ export default async function LandingPage() {
         margin: '0 auto',
       }}>
         <p className="fade-up" style={{
-          fontSize: '0.7rem',
+          fontSize: '11px',
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
-          color: 'var(--terracotta)',
+          color: '#A78BFA',
           marginBottom: '1.5rem',
           animationDelay: '0s',
         }}>
-          A relationship memory companion
+          YOUR RELATIONSHIP MEMORY COMPANION
         </p>
-        <h1 className="serif fade-up" style={{
-          fontSize: 'clamp(2.5rem, 7vw, 4.5rem)',
-          fontWeight: 600,
+        <h1 className="fade-up heading-serif" style={{
+          fontSize: 'clamp(3.125rem, 8.75vw, 5.625rem)',
+          fontWeight: 700,
           lineHeight: 1.1,
-          color: 'var(--charcoal)',
+          color: '#1F1F1F',
           marginBottom: '1.5rem',
           animationDelay: '0.1s',
-          opacity: 0,
         }}>
           Never forget what matters<br />
-          <em style={{ color: 'var(--terracotta)' }}>to the people who matter.</em>
+          <em style={{ fontFamily: 'Inter, sans-serif', fontStyle: 'italic', color: 'var(--terracotta)' }}>to the people who matter.</em>
         </h1>
         <p className="fade-up" style={{
+          fontFamily: 'Inter, sans-serif',
           fontSize: '1rem',
-          color: 'var(--muted)',
+          color: '#6B7280',
           lineHeight: 1.7,
           marginBottom: '2.5rem',
-          maxWidth: '400px',
+          maxWidth: '420px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
           animationDelay: '0.2s',
-          opacity: 0,
         }}>
           A private space to remember the little things — stories shared, gifts exchanged,
           moments that meant something.
         </p>
-        <div className="fade-up" style={{ animationDelay: '0.3s', opacity: 0 }}>
+        <div className="fade-up" style={{ animationDelay: '0.3s' }}>
           <Link href="/login">
-            <button className="btn-primary" style={{ padding: '0.8rem 2rem', fontSize: '0.9rem' }}>
+            <button
+              type="button"
+              style={{
+                padding: '16px 40px',
+                borderRadius: '50px',
+                border: 'none',
+                background: 'var(--accent)',
+                color: '#FFFFFF',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '0.95rem',
+                fontWeight: 500,
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(124, 58, 237, 0.35)',
+              }}
+            >
               Start remembering
             </button>
           </Link>

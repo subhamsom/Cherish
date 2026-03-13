@@ -50,7 +50,7 @@ export default async function PeoplePage() {
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}
+            style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
           >
             People
           </h1>
@@ -64,7 +64,7 @@ export default async function PeoplePage() {
         <div className="card card--subtle" style={{ padding: '2.6rem 2.4rem' }}>
           <p
             className="serif"
-            style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '0.9rem' }}
+            style={{ fontSize: '1.875rem', color: 'var(--text-primary)', marginBottom: '0.9rem' }}
           >
             Everyone you love lives here.
           </p>

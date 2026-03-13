@@ -39,7 +39,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
             {getEntryTypeLabel((entry as any).type)}
           </span>
         </div>
-        <h1 className="serif" style={{ fontSize: '1.8rem', fontWeight: 600, marginTop: '0.5rem' }}>
+        <h1 className="serif" style={{ fontSize: '2.25rem', fontWeight: 700, marginTop: '0.5rem' }}>
           {entry.title}
         </h1>
       </div>

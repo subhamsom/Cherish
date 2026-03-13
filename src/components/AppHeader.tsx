@@ -33,8 +33,8 @@ export default function AppHeader() {
       <h1
         className="serif"
         style={{
-          fontSize: '1.25rem',
-          fontWeight: 600,
+          fontSize: '1.5625rem',
+          fontWeight: 700,
           color: 'var(--text-primary)',
           margin: 0,
         }}
