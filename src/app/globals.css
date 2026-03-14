@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -45,15 +44,15 @@ body {
   margin: 0;
   background: var(--bg-primary);
   color: var(--text-secondary);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
 }
 
-/* Headings — Cormorant Garamond (sizes set in components; ensure font wins over Tailwind/body) */
+/* Headings — Fraunces */
 h1, h2, h3, .heading-serif, .serif {
-  font-family: 'Cormorant Garamond', serif !important;
+  font-family: var(--font-heading), serif !important;
   font-weight: 700;
   color: #1F1F1F;
 }
@@ -102,7 +101,7 @@ a:hover {
   color: #FFFFFF;
   padding: 0.75rem 1.75rem;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -123,7 +122,7 @@ a:hover {
   color: var(--text-secondary);
   padding: 0.65rem 1.5rem;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -147,7 +146,7 @@ a:hover {
   color: var(--text-primary);
   padding: 0.65rem 1rem;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -226,7 +225,7 @@ a:hover {
   color: #FFFFFF;
   padding: 1rem 1.5rem;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 1.05rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -290,7 +289,7 @@ a:hover {
   border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 0.75rem 1rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -318,7 +317,7 @@ input[type="datetime-local"] {
   border: 1px solid #E5E1FF;
   border-radius: 8px;
   padding: 10px 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 14px;
   color: #1F1F1F;
   width: 100%;
@@ -357,7 +356,7 @@ textarea {
   border: 1px solid #E5E1FF;
   border-radius: 8px;
   padding: 10px 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-size: 14px;
   color: #1F1F1F;
   width: 100%;
@@ -414,7 +413,7 @@ textarea:focus {
   --rdp-accent-background-color: #7C3AED;
   --rdp-today-color: #1F1F1F;
   --rdp-disabled-opacity: 0.5;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
 }
 
 .rdp-datepicker-panel .rdp-day_button[data-selected] {
@@ -439,7 +438,7 @@ textarea:focus {
   border: 1px solid #E5E1FF !important;
   border-radius: 8px !important;
   padding: 6px 10px !important;
-  font-family: 'Inter', sans-serif !important;
+  font-family: var(--font-body), sans-serif !important;
   font-size: 13px !important;
   color: #7C3AED !important;
   outline: none;

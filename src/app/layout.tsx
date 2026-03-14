@@ -1,5 +1,20 @@
 import type { Metadata, Viewport } from 'next'
+import { Fraunces, DM_Sans } from 'next/font/google'
 import './globals.css'
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-heading',
+  display: 'swap',
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-body',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Cherish — Remember what matters',
@@ -13,22 +28,14 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#C4714A',
+  themeColor: '#7C3AED',
   width: 'device-width',
   initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   )
