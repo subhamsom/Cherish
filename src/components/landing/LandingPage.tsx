@@ -21,7 +21,7 @@ export default function LandingPage() {
   return (
     <main
       className="min-h-screen flex flex-col"
-      style={PAGE_BG}
+      style={{ ...PAGE_BG, colorScheme: 'light' }}
     >
       {/* ——— NAVBAR ——— */}
       <nav className="flex justify-between items-center w-full px-6 py-6 md:px-12 md:py-6">

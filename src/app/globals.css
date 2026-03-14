@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light only;
+}
+
+:root {
   /* Primary palette */
   --bg-primary: #FFFFFF;
   --bg-secondary: #F5F3FF;
@@ -29,6 +33,12 @@
   --border: #E5E1FF;
   --card: #F9F8FF;
   --card-elevated: #F9F8FF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
 }
 
 * {

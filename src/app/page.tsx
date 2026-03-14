@@ -7,5 +7,9 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (user) redirect('/dashboard')
 
-  return <LandingPage />
+  return (
+    <div className="min-h-screen bg-white" style={{ colorScheme: 'light' }}>
+      <LandingPage />
+    </div>
+  )
 }
