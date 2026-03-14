@@ -46,7 +46,9 @@ export default function LandingPage() {
       </nav>
 
       {/* ——— HERO ——— */}
-      <section className="relative min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 overflow-hidden">
+      <section
+        className="relative flex flex-col items-center px-4 overflow-hidden pt-[30px] pb-[40px] md:pb-[60px] min-h-0"
+      >
         <div className="max-w-[600px] w-full flex flex-col items-center text-center">
           <motion.p
             initial={{ opacity: 0, y: 16 }}
