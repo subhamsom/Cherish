@@ -136,136 +136,147 @@ export default function LandingPage() {
           </motion.p>
         </div>
 
-        {/* Floating cards — only >= 1200px, in margins outside center column */}
+        {/* Floating cards — only >= 1200px; rotation on outer div, float on inner motion.div */}
         <div className="hidden min-[1200px]:block absolute inset-0 pointer-events-none">
-          <motion.div
-            className="absolute w-[220px] p-4 rounded-2xl"
+          {/* Card 1 — Rohan / Moment */}
+          <div
             style={{
               position: 'absolute',
-              left: '3%',
+              left: '10%',
               top: '38%',
               transform: 'rotate(-14deg)',
-              ...cardStyle,
-              boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
+              zIndex: 10,
             }}
-            animate={{ y: [0, -14, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
           >
-            <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+            <motion.div
+              className="w-[220px] p-4 rounded-2xl"
               style={{
-                fontFamily: 'var(--font-heading)',
-                color: '#7C3AED',
-                background: 'rgba(139, 92, 246, 0.12)',
+                ...cardStyle,
+                boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
               }}
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
-              Moment
-            </span>
-            <p
-              className="mt-2 text-sm"
-              style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
-            >
-              Rohan mentioned he&apos;s been stressed about his new job. Check in
-              next week.
-            </p>
-            <div
-              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium"
-              style={{ background: '#7C3AED' }}
-            >
-              R
-            </div>
-          </motion.div>
-          <motion.div
-            className="absolute w-[220px] p-4 rounded-2xl"
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  color: '#7C3AED',
+                  background: 'rgba(139, 92, 246, 0.12)',
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
+                Moment
+              </span>
+              <p
+                className="mt-2 text-sm"
+                style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
+              >
+                Rohan mentioned he&apos;s been stressed about his new job. Check in
+                next week.
+              </p>
+              <div
+                className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium"
+                style={{ background: '#7C3AED' }}
+              >
+                R
+              </div>
+            </motion.div>
+          </div>
+          {/* Card 2 — Mansi / Gift Given */}
+          <div
             style={{
               position: 'absolute',
-              right: '2%',
+              right: '6%',
               top: '18%',
-              transform: 'rotate(10deg)',
-              ...cardStyle,
-              boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
-            }}
-            animate={{ y: [0, -10, 0] }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 0.8,
+              transform: 'rotate(6deg)',
+              zIndex: 10,
             }}
           >
-            <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+            <motion.div
+              className="w-[220px] p-4 rounded-2xl"
               style={{
-                fontFamily: 'var(--font-heading)',
-                color: '#DB2777',
-                background: 'rgba(249, 168, 212, 0.2)',
+                ...cardStyle,
+                boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
               }}
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
               <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: '#DB2777' }}
-              />
-              Gift Given
-            </span>
-            <p
-              className="mt-2 text-sm"
-              style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
-            >
-              Gifted Mansi the book she mentioned 3 months ago. She cried.
-            </p>
-            <div
-              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
-              style={{ background: '#F9A8D4', color: '#9D174D' }}
-            >
-              M
-            </div>
-          </motion.div>
-          <motion.div
-            className="absolute w-[220px] p-4 rounded-2xl"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  color: '#DB2777',
+                  background: 'rgba(249, 168, 212, 0.2)',
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: '#DB2777' }}
+                />
+                Gift Given
+              </span>
+              <p
+                className="mt-2 text-sm"
+                style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
+              >
+                Gifted Mansi the book she mentioned 3 months ago. She cried.
+              </p>
+              <div
+                className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+                style={{ background: '#F9A8D4', color: '#9D174D' }}
+              >
+                M
+              </div>
+            </motion.div>
+          </div>
+          {/* Card 3 — Priya / Reminder */}
+          <div
             style={{
               position: 'absolute',
-              right: '5%',
-              bottom: '10%',
-              transform: 'rotate(-8deg)',
-              ...cardStyle,
-              boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
-            }}
-            animate={{ y: [0, -12, 0] }}
-            transition={{
-              duration: 3.8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 1.4,
+              right: '12%',
+              bottom: '18%',
+              transform: 'rotate(16deg)',
+              zIndex: 10,
             }}
           >
-            <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+            <motion.div
+              className="w-[220px] p-4 rounded-2xl"
               style={{
-                fontFamily: 'var(--font-heading)',
-                color: '#059669',
-                background: 'rgba(110, 231, 183, 0.2)',
+                ...cardStyle,
+                boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
               }}
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             >
               <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: '#059669' }}
-              />
-              Reminder
-            </span>
-            <p
-              className="mt-2 text-sm"
-              style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
-            >
-              Priya&apos;s birthday is in 3 days — she loves handwritten notes
-            </p>
-            <div
-              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
-              style={{ fontFamily: 'var(--font-body)', background: '#6EE7B7', color: '#065F46' }}
-            >
-              P
-            </div>
-          </motion.div>
+                className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  color: '#059669',
+                  background: 'rgba(110, 231, 183, 0.2)',
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: '#059669' }}
+                />
+                Reminder
+              </span>
+              <p
+                className="mt-2 text-sm"
+                style={{ fontFamily: 'var(--font-body)', color: '#2D1B69' }}
+              >
+                Priya&apos;s birthday is in 3 days — she loves handwritten notes
+              </p>
+              <div
+                className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+                style={{ fontFamily: 'var(--font-body)', background: '#6EE7B7', color: '#065F46' }}
+              >
+                P
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
