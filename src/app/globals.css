@@ -13,7 +13,7 @@
   --accent-hover: #6D28D9;
   --text-primary: #2D2D2D;
   --text-secondary: #4B5563;
-  --card-bg: #F9F8FF;
+  --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: #E5E1FF;
 
   /* Aliases for components using old names */
@@ -31,8 +31,8 @@
   --border-subtle: #E5E1FF;
   --border-strong: #DDD6FE;
   --border: #E5E1FF;
-  --card: #F9F8FF;
-  --card-elevated: #F9F8FF;
+  --card: rgba(255, 255, 255, 0.85);
+  --card-elevated: rgba(255, 255, 255, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -75,12 +75,26 @@ h1, h2, h3, .heading-serif, .serif {
   z-index: 1;
 }
 
+/* Mesh gradient background — fixed so it stays in place on scroll */
+.app-mesh-bg {
+  background-color: #FEFCFF;
+  background-image:
+    radial-gradient(ellipse 600px 500px at 15% 20%, rgba(196, 181, 253, 0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 600px at 80% 10%, rgba(249, 168, 212, 0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 60% 55%, rgba(221, 214, 254, 0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 350px 450px at 25% 75%, rgba(253, 242, 248, 0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 450px 350px at 88% 80%, rgba(249, 168, 212, 0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 300px at 45% 30%, rgba(255, 255, 255, 0.7) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
 .app-main {
   flex: 1;
   min-width: 0;
   padding: 2rem 1.5rem 3.5rem;
   max-width: 960px;
   margin: 0 auto;
+  background: transparent;
 }
 
 @media (min-width: 769px) {
@@ -94,6 +108,56 @@ h1, h2, h3, .heading-serif, .serif {
   .app-main {
     padding-top: 4.5rem;
   }
+}
+
+.desktop-nav {
+  background: rgba(245, 240, 255, 0.95) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-right: 1px solid rgba(229, 225, 255, 0.8) !important;
+}
+
+/* Active nav item — visible purple tint on lilac sidebar; rounded left and right */
+.desktop-nav .nav-link {
+  color: #6B5B8E !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+.desktop-nav .nav-link:hover {
+  background: rgba(124, 58, 237, 0.06) !important;
+  color: #6B5B8E !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+.desktop-nav .nav-link--active {
+  background: rgba(124, 58, 237, 0.12) !important;
+  border-left: 3px solid #7C3AED !important;
+  color: #7C3AED !important;
+  font-weight: 600 !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+
+.mobile-nav {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(229, 225, 255, 0.4) !important;
+}
+
+.mobile-fab-wrapper {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+}
+
+.app-header {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 /* Anchor defaults */

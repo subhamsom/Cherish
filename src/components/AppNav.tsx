@@ -57,19 +57,17 @@ export default function AppNav() {
     <>
       {/* Desktop sidebar — fixed, does not scroll */}
       <nav
-        className="desktop-nav"
+        className="desktop-nav bg-white/60 backdrop-blur-md border-r border-[rgba(229,225,255,0.5)]"
         style={{
           width: '250px',
           minHeight: '100vh',
           height: '100vh',
-          borderRight: '1px solid var(--card-border)',
           padding: '2.25rem 1.75rem 2rem',
           display: 'flex',
           flexDirection: 'column',
           position: 'fixed',
           top: 0,
           left: 0,
-          background: 'var(--bg-primary)',
           zIndex: 10,
         }}
       >
@@ -105,25 +103,23 @@ export default function AppNav() {
                     borderTopLeftRadius: isPrimary ? 999 : 6,
                     borderBottomLeftRadius: isPrimary ? 999 : 6,
                     fontSize: isPrimary ? '0.78rem' : '0.86rem',
-                    fontWeight: isPrimary || isActive ? 500 : 300,
                     letterSpacing: isPrimary ? '0.12em' : '0.02em',
                     textTransform: isPrimary ? 'uppercase' : 'none',
-                    background: isPrimary
-                      ? 'var(--accent)'
-                      : undefined,
-                    color: isPrimary
-                      ? '#FFFFFF'
-                      : isActive
-                      ? 'var(--text-primary)'
-                      : 'var(--text-secondary)',
-                    border: isPrimary
-                      ? 'none'
-                      : '1px solid transparent',
-                    borderLeft: !isPrimary ? (isActive ? '3px solid var(--accent)' : '3px solid transparent') : undefined,
-                    boxShadow: isPrimary
-                      ? '0 4px 12px rgba(124, 58, 237, 0.3)'
-                      : undefined,
-                    transition: 'all 0.16s ease',
+                    ...(isPrimary
+                      ? {
+                          background: 'var(--accent)',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)',
+                          fontWeight: 500,
+                        }
+                      : {
+                          border: '1px solid transparent',
+                          borderLeft: '3px solid transparent',
+                          borderTopRightRadius: 6,
+                          borderBottomRightRadius: 6,
+                          transition: 'all 0.16s ease',
+                        }),
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
@@ -238,7 +234,7 @@ export default function AppNav() {
 
       {/* Mobile top bar + floating action */}
       <nav
-        className="mobile-nav"
+        className="mobile-nav bg-white/60 backdrop-blur-md border-b border-[rgba(229,225,255,0.4)]"
         style={{
           position: 'fixed',
           top: 0,
@@ -248,9 +244,6 @@ export default function AppNav() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backdropFilter: 'blur(16px)',
-          background: 'var(--bg-primary)',
-          borderBottom: '1px solid var(--card-border)',
           zIndex: 100,
         }}
       >
@@ -308,7 +301,7 @@ export default function AppNav() {
       </nav>
 
       {/* Mobile floating action button — expandable */}
-      <div className="mobile-nav" style={{ position: 'fixed', right: '1.25rem', bottom: '1.6rem', zIndex: 90 }}>
+      <div className="mobile-fab-wrapper" style={{ position: 'fixed', right: '1.25rem', bottom: '1.6rem', zIndex: 90 }}>
         {fabOpen && (
           <div
             style={{
@@ -384,21 +377,12 @@ export default function AppNav() {
       </div>
 
       <style>{`
-        .desktop-nav .nav-link {
-          background: transparent;
-        }
-        .desktop-nav .nav-link:hover {
-          background: var(--bg-secondary);
-          color: var(--text-primary);
-        }
-        .desktop-nav .nav-link--active {
-          background: var(--bg-secondary);
-        }
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
         }
         @media (min-width: 769px) {
           .mobile-nav { display: none !important; }
+          .mobile-fab-wrapper { display: none !important; }
         }
       `}</style>
     </>

@@ -9,7 +9,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!user) redirect('/login')
 
   return (
-    <div className="app-shell">
+    <div className="app-shell app-mesh-bg">
       <AppNav />
       <main className="app-main">
         <AppHeader />
