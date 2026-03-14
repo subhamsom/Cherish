@@ -4,8 +4,11 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Users, Sparkles, Heart } from 'lucide-react'
 
-const PAGE_GRADIENT =
-  'linear-gradient(160deg, #F5F0FF 0%, #FDF8FF 30%, #FFF0F8 60%, #F8F0FF 100%)'
+const PAGE_BG = {
+  backgroundColor: '#FEFCFF',
+  backgroundImage:
+    'radial-gradient(ellipse 600px 500px at 15% 20%, rgba(196, 181, 253, 0.4) 0%, transparent 70%), radial-gradient(ellipse 400px 600px at 80% 10%, rgba(249, 168, 212, 0.3) 0%, transparent 70%), radial-gradient(ellipse 500px 400px at 60% 55%, rgba(221, 214, 254, 0.25) 0%, transparent 70%), radial-gradient(ellipse 350px 450px at 25% 75%, rgba(253, 242, 248, 0.4) 0%, transparent 70%), radial-gradient(ellipse 450px 350px at 88% 80%, rgba(249, 168, 212, 0.2) 0%, transparent 70%), radial-gradient(ellipse 300px 300px at 45% 30%, rgba(255, 255, 255, 0.7) 0%, transparent 60%)',
+}
 
 const cardStyle = {
   background: 'rgba(255,255,255,0.85)',
@@ -18,14 +21,15 @@ export default function LandingPage() {
   return (
     <main
       className="min-h-screen flex flex-col"
-      style={{ background: PAGE_GRADIENT }}
+      style={PAGE_BG}
     >
       {/* ——— NAVBAR ——— */}
       <nav className="flex justify-between items-center w-full px-6 py-6 md:px-12 md:py-6">
         <span
-          className="text-2xl font-semibold"
+          className="font-semibold"
           style={{
             fontFamily: 'var(--font-heading)',
+            fontSize: '32px',
             color: '#7C3AED',
             letterSpacing: '-0.01em',
           }}
@@ -137,18 +141,23 @@ export default function LandingPage() {
           <motion.div
             className="absolute w-[220px] p-4 rounded-2xl"
             style={{
-              left: '2%',
-              top: '35%',
-              transform: 'rotate(-6deg)',
+              position: 'absolute',
+              left: '3%',
+              top: '38%',
+              transform: 'rotate(-14deg)',
               ...cardStyle,
               boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
             }}
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ y: [0, -14, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0 }}
           >
             <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5 bg-[#7C3AED]/10"
-              style={{ fontFamily: 'var(--font-heading)', color: '#7C3AED' }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                color: '#7C3AED',
+                background: 'rgba(139, 92, 246, 0.12)',
+              }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
               Moment
@@ -170,31 +179,32 @@ export default function LandingPage() {
           <motion.div
             className="absolute w-[220px] p-4 rounded-2xl"
             style={{
+              position: 'absolute',
               right: '2%',
-              top: '28%',
-              transform: 'rotate(4deg)',
+              top: '18%',
+              transform: 'rotate(10deg)',
               ...cardStyle,
               boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
             }}
-            animate={{ y: [0, -8, 0] }}
+            animate={{ y: [0, -10, 0] }}
             transition={{
               duration: 4,
               repeat: Infinity,
               ease: 'easeInOut',
-              delay: 0.6,
+              delay: 0.8,
             }}
           >
             <span
               className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
               style={{
                 fontFamily: 'var(--font-heading)',
-                color: '#F9A8D4',
+                color: '#DB2777',
                 background: 'rgba(249, 168, 212, 0.2)',
               }}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ background: '#F9A8D4' }}
+                style={{ background: '#DB2777' }}
               />
               Gift Given
             </span>
@@ -205,8 +215,8 @@ export default function LandingPage() {
               Gifted Mansi the book she mentioned 3 months ago. She cried.
             </p>
             <div
-              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium"
-              style={{ background: '#F9A8D4' }}
+              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium"
+              style={{ background: '#F9A8D4', color: '#9D174D' }}
             >
               M
             </div>
@@ -214,27 +224,32 @@ export default function LandingPage() {
           <motion.div
             className="absolute w-[220px] p-4 rounded-2xl"
             style={{
+              position: 'absolute',
               right: '5%',
-              bottom: '15%',
-              transform: 'rotate(-3deg)',
+              bottom: '10%',
+              transform: 'rotate(-8deg)',
               ...cardStyle,
               boxShadow: '0 8px 32px rgba(124, 58, 237, 0.12)',
             }}
-            animate={{ y: [0, -8, 0] }}
+            animate={{ y: [0, -12, 0] }}
             transition={{
-              duration: 4,
+              duration: 3.8,
               repeat: Infinity,
               ease: 'easeInOut',
-              delay: 1.2,
+              delay: 1.4,
             }}
           >
             <span
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5 bg-[#A78BFA]/20"
-              style={{ fontFamily: 'var(--font-heading)', color: '#A78BFA' }}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2 py-0.5"
+              style={{
+                fontFamily: 'var(--font-heading)',
+                color: '#059669',
+                background: 'rgba(110, 231, 183, 0.2)',
+              }}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
-                style={{ background: '#A78BFA' }}
+                style={{ background: '#059669' }}
               />
               Reminder
             </span>
@@ -244,17 +259,19 @@ export default function LandingPage() {
             >
               Priya&apos;s birthday is in 3 days — she loves handwritten notes
             </p>
+            <div
+              className="mt-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold"
+              style={{ fontFamily: 'var(--font-body)', background: '#6EE7B7', color: '#065F46' }}
+            >
+              P
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ——— SECTION 2: EMOTIONAL HOOK ——— */}
       <section className="py-12 md:py-20 px-4 sm:px-6">
-        <div
-          className="w-full max-w-4xl mx-auto"
-          style={{ borderTop: '1px solid rgba(124, 58, 237, 0.1)' }}
-        />
-        <div className="max-w-4xl mx-auto text-center pt-12 md:pt-20">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
