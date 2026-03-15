@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Person } from '@/types'
 import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
+import CaptureMomentButton from '@/components/dashboard/CaptureMomentButton'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -64,24 +65,7 @@ export default async function DashboardPage() {
             today become tomorrow&apos;s favorite stories.
           </p>
           <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
-            <Link href="/entries/new">
-              <button
-                type="button"
-                style={{
-                  background: '#7C3AED',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '10px 20px',
-                  fontFamily: 'Inter, sans-serif',
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  cursor: 'pointer',
-                }}
-              >
-                Capture a moment
-              </button>
-            </Link>
+            <CaptureMomentButton />
             <Link href="/people/new">
               <button className="btn-secondary">Add someone new</button>
             </Link>

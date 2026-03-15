@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Home, Users, CalendarClock, ChevronDown } from 'lucide-react'
+import EntryModal from '@/components/entries/EntryModal'
 
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
@@ -20,6 +21,7 @@ export default function AppNav() {
   const [user, setUser] = useState<{ avatar_url?: string; firstName: string; fullName?: string; email?: string } | null>(null)
   const [profileOpen, setProfileOpen] = useState(false)
   const [fabOpen, setFabOpen] = useState(false)
+  const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -90,8 +92,7 @@ export default function AppNav() {
           {navLinks.map((link) => {
             const isActive = pathname === link.href
             const isPrimary = link.primary
-            return (
-              <Link key={link.href} href={link.href} style={{ textDecoration: 'none' }}>
+            const content = (
                 <div
                   className={isPrimary ? undefined : `nav-link ${isActive ? 'nav-link--active' : ''}`}
                   style={{
@@ -147,6 +148,19 @@ export default function AppNav() {
                     />
                   )}
                 </div>
+            )
+            return isPrimary ? (
+              <button
+                key={link.href}
+                type="button"
+                onClick={() => setIsEntryModalOpen(true)}
+                style={{ textDecoration: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit', color: 'inherit', width: '100%', textAlign: 'left' }}
+              >
+                {content}
+              </button>
+            ) : (
+              <Link key={link.href} href={link.href} style={{ textDecoration: 'none' }}>
+                {content}
               </Link>
             )
           })}
@@ -315,24 +329,24 @@ export default function AppNav() {
               alignItems: 'flex-end',
             }}
           >
-            <Link href="/entries/new" style={{ textDecoration: 'none' }} onClick={() => setFabOpen(false)}>
-              <button
-                type="button"
-                style={{
-                  padding: '0.5rem 1rem',
-                  borderRadius: 999,
-                  border: '1px solid var(--card-border)',
-                  background: '#FFFFFF',
-                  color: 'var(--accent)',
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                ✨ New Moment
-              </button>
-            </Link>
+            <button
+              type="button"
+              onClick={() => { setFabOpen(false); setIsEntryModalOpen(true) }}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: 999,
+                border: '1px solid var(--card-border)',
+                background: '#FFFFFF',
+                color: 'var(--accent)',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer',
+              }}
+            >
+              ✨ New Moment
+            </button>
             <Link href="/people/new" style={{ textDecoration: 'none' }} onClick={() => setFabOpen(false)}>
               <button
                 type="button"
@@ -375,6 +389,8 @@ export default function AppNav() {
           +
         </button>
       </div>
+
+      <EntryModal isOpen={isEntryModalOpen} onClose={() => setIsEntryModalOpen(false)} />
 
       <style>{`
         @media (max-width: 768px) {

@@ -16,9 +16,10 @@ const ENTRY_TYPES: { value: EntryType; label: string; desc: string; placeholder:
 interface EntryFormProps {
   defaultPersonId?: string
   entry?: any
+  onSuccess?: () => void
 }
 
-export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
+export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFormProps) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -67,6 +68,10 @@ export default function EntryForm({ defaultPersonId, entry }: EntryFormProps) {
       if (error) { setError(error.message); setLoading(false); return }
     }
 
+    if (onSuccess) {
+      onSuccess()
+      return
+    }
     const selectedPerson = people.find(p => p.id === personId)
     if (selectedPerson) router.push(`/people/${selectedPerson.id}`)
     else router.push('/dashboard')
