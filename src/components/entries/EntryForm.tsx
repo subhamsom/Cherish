@@ -6,11 +6,18 @@ import { createClient } from '@/lib/supabase/client'
 import { Sparkles, Gift, FileText } from 'lucide-react'
 import type { Person, EntryType } from '@/types'
 
-const ENTRY_TYPES: { value: EntryType; label: string; desc: string; placeholder: string }[] = [
-  { value: 'moment', label: 'Moment', desc: 'A story, memory, or something meaningful', placeholder: 'What happened?' },
-  { value: 'gift_given', label: 'Gift given', desc: 'A gift you gave them', placeholder: 'What did you give?' },
-  { value: 'gift_received', label: 'Gift received', desc: 'A gift they gave you', placeholder: 'What did you receive?' },
-  { value: 'reminder_note', label: 'Note', desc: 'Something to remember or follow up on', placeholder: "What's on your mind?" },
+const ENTRY_TYPES: {
+  value: EntryType
+  label: string
+  desc: string
+  placeholder: string
+  iconColor: string
+  Icon: typeof Sparkles
+}[] = [
+  { value: 'moment', label: 'Moment', desc: 'A story, memory, or something meaningful', placeholder: 'What happened?', iconColor: '#7C3AED', Icon: Sparkles },
+  { value: 'gift_given', label: 'Gift\u00a0given', desc: 'A gift you gave them', placeholder: 'What did you give?', iconColor: '#DB2777', Icon: Gift },
+  { value: 'gift_received', label: 'Gift\u00a0received', desc: 'A gift they gave you', placeholder: 'What did you receive?', iconColor: '#059669', Icon: Gift },
+  { value: 'reminder_note', label: 'Note', desc: 'Something to remember or follow up on', placeholder: "What's on your mind?", iconColor: '#D97706', Icon: FileText },
 ]
 
 interface EntryFormProps {
@@ -109,40 +116,81 @@ export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFo
           </select>
         </div>
 
-        {/* Type */}
+        {/* Type — 2x2 grid of cards */}
         <div>
           <label className="label">Type</label>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            {ENTRY_TYPES.map(t => (
-              <button
-                key={t.value}
-                type="button"
-                onClick={() => setType(t.value)}
-                style={{
-                  padding: '0.6rem 1rem',
-                  borderRadius: '8px',
-                  border: '1px solid',
-                  borderColor: type === t.value ? 'var(--accent)' : 'var(--card-border)',
-                  background: type === t.value ? 'var(--bg-secondary)' : 'transparent',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                }}
-              >
-                <span style={{ display: 'flex', flexShrink: 0, color: type === t.value ? 'var(--accent)' : 'var(--charcoal-muted)' }}>
-                  {t.value === 'moment' && <Sparkles size={16} />}
-                  {t.value === 'gift_given' && <Gift size={16} />}
-                  {t.value === 'gift_received' && <Gift size={16} />}
-                  {t.value === 'reminder_note' && <FileText size={16} />}
-                </span>
-                <span style={{ fontSize: '0.85rem', fontWeight: type === t.value ? 500 : 400, color: type === t.value ? 'var(--accent)' : 'var(--text-primary)' }}>
-                  {t.label}
-                </span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--muted)', flex: 1, minWidth: 0 }}>{t.desc}</span>
-              </button>
-            ))}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '0.75rem',
+            }}
+          >
+            {ENTRY_TYPES.map((t) => {
+              const isSelected = type === t.value
+              const Icon = t.Icon
+              return (
+                <button
+                  key={t.value}
+                  type="button"
+                  onClick={() => setType(t.value)}
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    border: isSelected ? '2px solid #7C3AED' : '1px solid #E5E1FF',
+                    background: isSelected ? 'rgba(124, 58, 237, 0.06)' : '#FFFFFF',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    gap: '0.35rem',
+                    fontFamily: 'inherit',
+                    boxShadow: isSelected ? '0 2px 8px rgba(124, 58, 237, 0.12)' : 'none',
+                    transition: 'border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = '#A78BFA'
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(167, 139, 250, 0.2)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = '#E5E1FF'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ display: 'flex', color: t.iconColor, flexShrink: 0 }}>
+                      <Icon size={16} strokeWidth={2} />
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-heading), serif',
+                        fontSize: '0.9rem',
+                        fontWeight: 700,
+                        color: 'var(--text-primary)',
+                      }}
+                    >
+                      {t.label}
+                    </span>
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-body), sans-serif',
+                      fontSize: '0.78rem',
+                      color: '#747a84',
+                      lineHeight: 1.35,
+                      textAlign: 'left',
+                    }}
+                  >
+                    {t.desc}
+                  </span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
