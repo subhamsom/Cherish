@@ -9,6 +9,7 @@ interface DatePickerProps {
   value: Date | null
   onChange: (date: Date) => void
   minDate?: Date
+  maxDate?: Date
   placeholder?: string
 }
 
@@ -25,6 +26,7 @@ export default function DatePicker({
   value,
   onChange,
   minDate,
+  maxDate,
   placeholder = 'Select date…',
 }: DatePickerProps) {
   const [open, setOpen] = useState(false)
@@ -33,9 +35,11 @@ export default function DatePicker({
 
   const now = new Date()
   const currentYear = now.getFullYear()
+  const startOfTomorrow = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate() + 1) : undefined
   const [displayMonth, setDisplayMonth] = useState<Date>(() => {
     if (value) return new Date(value.getFullYear(), value.getMonth(), 1)
     if (minDate && minDate > now) return new Date(minDate.getFullYear(), minDate.getMonth(), 1)
+    if (maxDate) return new Date(maxDate.getFullYear(), maxDate.getMonth(), 1)
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
 
@@ -49,9 +53,10 @@ export default function DatePicker({
     if (open) {
       if (value) setDisplayMonth(new Date(value.getFullYear(), value.getMonth(), 1))
       else if (minDate && minDate > now) setDisplayMonth(new Date(minDate.getFullYear(), minDate.getMonth(), 1))
+      else if (maxDate) setDisplayMonth(new Date(maxDate.getFullYear(), maxDate.getMonth(), 1))
       else setDisplayMonth(new Date(now.getFullYear(), now.getMonth(), 1))
     }
-  }, [open, value, minDate])
+  }, [open, value, minDate, maxDate])
 
   useEffect(() => {
     function handleMouseDownOutside(e: MouseEvent) {
@@ -127,7 +132,7 @@ export default function DatePicker({
             const dir = deltaX < 0 ? 1 : -1
             const next = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + dir, 1)
             const min = new Date(currentYear, 0, 1)
-            const max = new Date(currentYear + 5, 11, 1)
+            const max = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), 1) : new Date(currentYear + 5, 11, 1)
             if (next < min || next > max) return
             handleMonthChange(next)
           }}
@@ -143,7 +148,11 @@ export default function DatePicker({
                 setOpen(false)
               }
             }}
-            disabled={minDate ? { before: minDate } : undefined}
+            disabled={
+              minDate || startOfTomorrow
+                ? { ...(minDate && { before: minDate }), ...(startOfTomorrow && { after: startOfTomorrow }) }
+                : undefined
+            }
             captionLayout="dropdown"
             navLayout="around"
             components={{
@@ -200,7 +209,7 @@ export default function DatePicker({
               },
             }}
             startMonth={new Date(currentYear, 0, 1)}
-            endMonth={new Date(currentYear + 5, 11, 1)}
+            endMonth={maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), 1) : new Date(currentYear + 5, 11, 1)}
           />
         </div>
       )}

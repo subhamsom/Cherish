@@ -3,13 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import DatePicker from '@/components/ui/DatePicker'
 import type { Person, RelationshipType } from '@/types'
 
 const RELATIONSHIP_TYPES: RelationshipType[] = ['partner', 'friend', 'family', 'colleague', 'other']
-
-function todayMax(): string {
-  return new Date().toISOString().split('T')[0]
-}
 
 interface PersonFormProps {
   person?: Person
@@ -24,6 +21,7 @@ export default function PersonForm({ person, onSuccess }: PersonFormProps) {
   const [name, setName] = useState(person?.name || '')
   const [relationshipType, setRelationshipType] = useState<RelationshipType>(person?.relationship_type || 'friend')
   const [birthday, setBirthday] = useState(person?.birthday || '')
+  const birthdayDate = birthday ? new Date(birthday + 'T12:00:00') : null
   const [notes, setNotes] = useState(person?.notes || '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -101,13 +99,11 @@ export default function PersonForm({ person, onSuccess }: PersonFormProps) {
 
         <div>
           <label className="label" htmlFor="birthday">Birthday (optional)</label>
-          <input
-            type="date"
-            id="birthday"
-            className="input"
-            value={birthday}
-            onChange={e => setBirthday(e.target.value)}
-            max={todayMax()}
+          <DatePicker
+            value={birthdayDate}
+            onChange={(d) => setBirthday(d.toISOString().split('T')[0])}
+            placeholder="Select date…"
+            maxDate={new Date()}
           />
         </div>
 

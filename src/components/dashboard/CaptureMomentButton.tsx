@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import EntryModal from '@/components/entries/EntryModal'
+import PersonModal from '@/components/people/PersonModal'
 
 export default function CaptureMomentButton() {
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
+  const [isPersonModalOpen, setIsPersonModalOpen] = useState(false)
 
   return (
     <>
@@ -25,7 +27,12 @@ export default function CaptureMomentButton() {
       >
         Capture a moment
       </button>
-      <EntryModal isOpen={isEntryModalOpen} onClose={() => setIsEntryModalOpen(false)} />
+      <EntryModal
+        isOpen={isEntryModalOpen}
+        onClose={() => setIsEntryModalOpen(false)}
+        onAddPersonClick={() => { setIsEntryModalOpen(false); setIsPersonModalOpen(true) }}
+      />
+      <PersonModal isOpen={isPersonModalOpen} onClose={() => setIsPersonModalOpen(false)} />
     </>
   )
 }

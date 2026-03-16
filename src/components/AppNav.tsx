@@ -392,7 +392,11 @@ export default function AppNav() {
         </button>
       </div>
 
-      <EntryModal isOpen={isEntryModalOpen} onClose={() => setIsEntryModalOpen(false)} />
+      <EntryModal
+        isOpen={isEntryModalOpen}
+        onClose={() => setIsEntryModalOpen(false)}
+        onAddPersonClick={() => { setIsEntryModalOpen(false); setIsPersonModalOpen(true) }}
+      />
       <PersonModal isOpen={isPersonModalOpen} onClose={() => setIsPersonModalOpen(false)} />
 
       <style>{`

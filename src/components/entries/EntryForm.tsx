@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Sparkles, Gift, FileText } from 'lucide-react'
+import DatePicker from '@/components/ui/DatePicker'
 import type { Person, EntryType } from '@/types'
 
 const ENTRY_TYPES: {
@@ -24,9 +25,10 @@ interface EntryFormProps {
   defaultPersonId?: string
   entry?: any
   onSuccess?: () => void
+  onAddPersonClick?: () => void
 }
 
-export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFormProps) {
+export default function EntryForm({ defaultPersonId, entry, onSuccess, onAddPersonClick }: EntryFormProps) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -37,7 +39,6 @@ export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFo
   const [body, setBody] = useState(entry?.body ?? '')
   const [date, setDate] = useState(entry?.date || new Date().toISOString().split('T')[0])
   const [tags, setTags] = useState<string>(entry?.tags?.join(', ') || '')
-  const [datePickerOpen, setDatePickerOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -114,6 +115,27 @@ export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFo
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
+          {onAddPersonClick && (
+            <button
+              type="button"
+              onClick={onAddPersonClick}
+              style={{
+                marginTop: '0.5rem',
+                padding: 0,
+                border: 'none',
+                background: 'none',
+                fontFamily: 'var(--font-body), sans-serif',
+                fontSize: '13px',
+                color: '#7C3AED',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline' }}
+              onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none' }}
+            >
+              + Add new person
+            </button>
+          )}
         </div>
 
         {/* Type — 2x2 grid of cards */}
@@ -221,81 +243,12 @@ export default function EntryForm({ defaultPersonId, entry, onSuccess }: EntryFo
         {/* Date */}
         <div>
           <label className="label">Date</label>
-          {(() => {
-            const today = new Date().toISOString().split('T')[0]
-            const yesterday = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().split('T')[0] })()
-            const isToday = date === today
-            const isYesterday = date === yesterday
-            const isCustom = !isToday && !isYesterday
-            return (
-              <>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
-                  <button
-                    type="button"
-                    onClick={() => { setDate(today); setDatePickerOpen(false) }}
-                    style={{
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: 999,
-                      border: '1px solid',
-                      borderColor: isToday ? 'var(--accent)' : 'var(--card-border)',
-                      background: isToday ? '#EDE9FE' : 'transparent',
-                      fontSize: '0.8rem',
-                      color: isToday ? 'var(--accent)' : 'var(--text-primary)',
-                      cursor: 'pointer',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    Today
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setDate(yesterday); setDatePickerOpen(false) }}
-                    style={{
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: 999,
-                      border: '1px solid',
-                      borderColor: isYesterday ? 'var(--accent)' : 'var(--card-border)',
-                      background: isYesterday ? '#EDE9FE' : 'transparent',
-                      fontSize: '0.8rem',
-                      color: isYesterday ? 'var(--accent)' : 'var(--text-primary)',
-                      cursor: 'pointer',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    Yesterday
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDatePickerOpen(true)}
-                    style={{
-                      padding: '0.35rem 0.75rem',
-                      borderRadius: 999,
-                      border: '1px solid',
-                      borderColor: isCustom || datePickerOpen ? 'var(--accent)' : 'var(--card-border)',
-                      background: isCustom || datePickerOpen ? '#EDE9FE' : 'transparent',
-                      fontSize: '0.8rem',
-                      color: isCustom || datePickerOpen ? 'var(--accent)' : 'var(--text-primary)',
-                      cursor: 'pointer',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    Pick a date
-                  </button>
-                </div>
-                {(datePickerOpen || isCustom) && (
-                  <input
-                    type="date"
-                    id="date"
-                    className="input"
-                    value={date}
-                    onChange={e => setDate(e.target.value)}
-                    max={new Date().toISOString().split('T')[0]}
-                    style={{ marginTop: '0.5rem' }}
-                  />
-                )}
-              </>
-            )
-          })()}
+          <DatePicker
+            value={date ? new Date(date + 'T12:00:00') : null}
+            onChange={(d) => setDate(d.toISOString().split('T')[0])}
+            placeholder="Select date…"
+            maxDate={new Date()}
+          />
         </div>
 
         {/* Tags */}

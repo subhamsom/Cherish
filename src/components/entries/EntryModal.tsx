@@ -7,9 +7,10 @@ import EntryForm from './EntryForm'
 interface EntryModalProps {
   isOpen: boolean
   onClose: () => void
+  onAddPersonClick?: () => void
 }
 
-export default function EntryModal({ isOpen, onClose }: EntryModalProps) {
+export default function EntryModal({ isOpen, onClose, onAddPersonClick }: EntryModalProps) {
   const router = useRouter()
 
   function handleSuccess() {
@@ -19,7 +20,7 @@ export default function EntryModal({ isOpen, onClose }: EntryModalProps) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Capture a moment">
-      <EntryForm onSuccess={handleSuccess} />
+      <EntryForm onSuccess={handleSuccess} onAddPersonClick={onAddPersonClick} />
     </Modal>
   )
 }
