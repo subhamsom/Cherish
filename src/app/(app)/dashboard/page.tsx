@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { Person } from '@/types'
 import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
 import CaptureMomentButton from '@/components/dashboard/CaptureMomentButton'
+import AddPersonButton from '@/components/dashboard/AddPersonButton'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -66,9 +67,7 @@ export default async function DashboardPage() {
           </p>
           <div style={{ marginTop: '0.5rem', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem' }}>
             <CaptureMomentButton />
-            <Link href="/people/new">
-              <button className="btn-secondary">Add someone new</button>
-            </Link>
+            <AddPersonButton className="btn-secondary">Add someone new</AddPersonButton>
           </div>
         </div>
       </section>
@@ -103,9 +102,7 @@ export default async function DashboardPage() {
               Circle of care
             </h2>
           </div>
-          <Link href="/people/new" style={{ textDecoration: 'none' }}>
-            <button className="btn-secondary">+ Add person</button>
-          </Link>
+          <AddPersonButton className="btn-secondary">+ Add person</AddPersonButton>
         </div>
 
         {!people?.length ? (
@@ -127,9 +124,7 @@ export default async function DashboardPage() {
               Add the people who matter most so you can notice the small, beautiful things about
               them.
             </p>
-            <Link href="/people/new">
-              <button className="btn-primary">Add your first person</button>
-            </Link>
+            <AddPersonButton className="btn-primary">Add your first person</AddPersonButton>
           </div>
         ) : (
           <div

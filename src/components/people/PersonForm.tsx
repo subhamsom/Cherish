@@ -14,9 +14,10 @@ function todayMax(): string {
 interface PersonFormProps {
   person?: Person
   onSave?: (id: string) => void
+  onSuccess?: () => void
 }
 
-export default function PersonForm({ person }: PersonFormProps) {
+export default function PersonForm({ person, onSuccess }: PersonFormProps) {
   const router = useRouter()
   const supabase = createClient()
 
@@ -46,10 +47,12 @@ export default function PersonForm({ person }: PersonFormProps) {
     if (person) {
       const { error } = await supabase.from('people').update(payload).eq('id', person.id)
       if (error) { setError(error.message); setLoading(false); return }
+      if (onSuccess) { onSuccess(); return }
       router.push(`/people/${person.id}`)
     } else {
       const { data, error } = await supabase.from('people').insert(payload).select().single()
       if (error) { setError(error.message); setLoading(false); return }
+      if (onSuccess) { onSuccess(); return }
       router.push(`/people/${data.id}`)
     }
   }

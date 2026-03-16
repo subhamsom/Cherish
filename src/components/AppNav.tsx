@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Home, Users, CalendarClock, ChevronDown } from 'lucide-react'
 import EntryModal from '@/components/entries/EntryModal'
+import PersonModal from '@/components/people/PersonModal'
 
 const navLinks = [
   { href: '/dashboard', label: 'Home', icon: 'home' as const },
@@ -22,6 +23,7 @@ export default function AppNav() {
   const [profileOpen, setProfileOpen] = useState(false)
   const [fabOpen, setFabOpen] = useState(false)
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
+  const [isPersonModalOpen, setIsPersonModalOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -347,24 +349,24 @@ export default function AppNav() {
             >
               ✨ New Moment
             </button>
-            <Link href="/people/new" style={{ textDecoration: 'none' }} onClick={() => setFabOpen(false)}>
-              <button
-                type="button"
-                style={{
-                  padding: '0.5rem 1rem',
-                  borderRadius: 999,
-                  border: '1px solid var(--card-border)',
-                  background: '#FFFFFF',
-                  color: 'var(--accent)',
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                👤 Add Person
-              </button>
-            </Link>
+            <button
+              type="button"
+              onClick={() => { setFabOpen(false); setIsPersonModalOpen(true) }}
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: 999,
+                border: '1px solid var(--card-border)',
+                background: '#FFFFFF',
+                color: 'var(--accent)',
+                fontSize: '0.8rem',
+                fontWeight: 500,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                whiteSpace: 'nowrap',
+                cursor: 'pointer',
+              }}
+            >
+              👤 Add Person
+            </button>
           </div>
         )}
         <button
@@ -391,6 +393,7 @@ export default function AppNav() {
       </div>
 
       <EntryModal isOpen={isEntryModalOpen} onClose={() => setIsEntryModalOpen(false)} />
+      <PersonModal isOpen={isPersonModalOpen} onClose={() => setIsPersonModalOpen(false)} />
 
       <style>{`
         @media (max-width: 768px) {

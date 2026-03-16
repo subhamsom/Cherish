@@ -33,7 +33,12 @@ function getDefaultDateTime() {
   }
 }
 
-export default function ReminderForm() {
+interface ReminderFormProps {
+  onSuccess?: () => void
+}
+
+export default function ReminderForm(props?: ReminderFormProps) {
+  const { onSuccess } = props ?? {}
   const router = useRouter()
   const supabase = createClient()
 
@@ -137,6 +142,10 @@ export default function ReminderForm() {
       return
     }
 
+    if (onSuccess) {
+      onSuccess()
+      return
+    }
     router.push('/reminders')
   }
 

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Person } from '@/types'
+import AddPersonButton from '@/components/dashboard/AddPersonButton'
 
 const RELATIONSHIP_BORDER_COLORS: Record<string, string> = {
   partner: '#F9A8D4',
@@ -55,9 +56,7 @@ export default async function PeoplePage() {
             People
           </h1>
         </div>
-        <Link href="/people/new">
-          <button className="btn-primary">+ Add person</button>
-        </Link>
+        <AddPersonButton className="btn-primary">+ Add person</AddPersonButton>
       </div>
 
       {!people?.length ? (
@@ -79,9 +78,7 @@ export default async function PeoplePage() {
             Start with one person you&apos;d like to notice more often. Their page will become a
             home for the stories you collect.
           </p>
-          <Link href="/people/new">
-            <button className="btn-primary">Add your first person</button>
-          </Link>
+          <AddPersonButton className="btn-primary">Add your first person</AddPersonButton>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>

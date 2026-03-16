@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import RemindersList from '@/components/reminders/RemindersList'
+import NewReminderButton from '@/components/reminders/NewReminderButton'
 
 export default function RemindersPage() {
   return (
@@ -32,14 +32,12 @@ export default function RemindersPage() {
             Reminders
           </h1>
         </div>
-        <Link href="/reminders/new">
-          <button
-            className="btn-primary"
-            style={{ borderRadius: '50px' }}
-          >
-            New reminder
-          </button>
-        </Link>
+        <NewReminderButton
+          className="btn-primary"
+          style={{ borderRadius: '50px' }}
+        >
+          New reminder
+        </NewReminderButton>
       </div>
 
       <RemindersList />

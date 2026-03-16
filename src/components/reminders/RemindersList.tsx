@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import ReminderModal from './ReminderModal'
 import type { Person } from '@/types'
 import type { Reminder } from '@/types'
 
@@ -48,6 +48,7 @@ export default function RemindersList() {
   const [reminders, setReminders] = useState<ReminderWithPerson[]>([])
   const [people, setPeople] = useState<Person[]>([])
   const [filterPersonId, setFilterPersonId] = useState<string>('')
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [actioningId, setActioningId] = useState<string | null>(null)
 
@@ -286,14 +287,15 @@ export default function RemindersList() {
           <p style={{ fontSize: '0.9rem', color: '#747a84', marginBottom: '1.5rem', maxWidth: '24rem', marginLeft: 'auto', marginRight: 'auto' }}>
             Set a reminder so you never forget to follow up with the people who matter.
           </p>
-          <Link href="/reminders/new">
-            <button
-              className="btn-primary"
-              style={{ borderRadius: '50px' }}
-            >
-              Create your first reminder
-            </button>
-          </Link>
+          <button
+            type="button"
+            className="btn-primary"
+            style={{ borderRadius: '50px' }}
+            onClick={() => setIsReminderModalOpen(true)}
+          >
+            Create your first reminder
+          </button>
+          <ReminderModal isOpen={isReminderModalOpen} onClose={() => setIsReminderModalOpen(false)} />
         </div>
       ) : (
         <>
