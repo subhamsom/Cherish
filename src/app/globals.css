@@ -512,22 +512,52 @@ textarea:focus {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* DatePicker (react-day-picker) — themed panel */
+/* DatePicker (react-day-picker) — themed panel, consistent with app (#F9F8FF, #E5E1FF, #7C3AED) */
 .rdp-datepicker-panel .rdp {
   --rdp-accent-color: #ffffff;
   --rdp-accent-background-color: #7C3AED;
   --rdp-today-color: #1F1F1F;
   --rdp-disabled-opacity: 0.5;
+  --rdp-day_button-border-radius: 8px;
+  --rdp-day_button-border: 1px solid transparent;
+  --rdp-dropdown-gap: 0.5rem;
+  --rdp-weekday-opacity: 1;
   font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  color: #1F1F1F;
+}
+
+/* Weekday row (Mon, Tue, …) */
+.rdp-datepicker-panel .rdp-weekday {
+  color: #747a84;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 0;
+}
+
+/* Day cells */
+.rdp-datepicker-panel .rdp-day_button {
+  color: #1F1F1F;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.rdp-datepicker-panel .rdp-day_button:hover:not(:disabled):not([data-selected]) {
+  background-color: rgba(124, 58, 237, 0.06);
+  border-color: rgba(229, 225, 255, 0.8);
 }
 
 .rdp-datepicker-panel .rdp-day_button[data-selected] {
   background-color: #7C3AED !important;
   color: #ffffff !important;
+  border-color: #7C3AED !important;
 }
 
-.rdp-datepicker-panel .rdp-day_today:not([data-selected]) {
+.rdp-datepicker-panel .rdp-day_today .rdp-day_button:not([data-selected]) {
   background-color: #E5E1FF;
+  color: #1F1F1F;
 }
 
 .rdp-datepicker-panel .rdp-day_button:disabled,
@@ -536,7 +566,24 @@ textarea:focus {
   opacity: 0.6;
 }
 
-/* Month/year dropdowns in calendar header */
+/* Days outside current month — subtle */
+.rdp-datepicker-panel .rdp-outside .rdp-day_button {
+  color: #747a84;
+  opacity: 0.6;
+}
+
+/* Month caption row (contains dropdowns) */
+.rdp-datepicker-panel .rdp-month_caption {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.rdp-datepicker-panel .rdp-dropdowns {
+  gap: 0.5rem;
+}
+
+/* Month/year dropdowns — hidden native selects (we use custom dropdowns); keep for fallback */
 .rdp-datepicker-panel .rdp select,
 .rdp-datepicker-panel select {
   background: #F9F8FF !important;

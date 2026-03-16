@@ -1,9 +1,125 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarIcon, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { DayPicker, type NavProps } from 'react-day-picker'
 import 'react-day-picker/style.css'
+
+type DropdownOption = { value: number; label: string; disabled: boolean }
+
+const dropdownTriggerStyle: React.CSSProperties = {
+  background: '#F9F8FF',
+  border: '1px solid #E5E1FF',
+  borderRadius: '8px',
+  padding: '6px 10px',
+  fontFamily: 'var(--font-body), sans-serif',
+  fontSize: '13px',
+  color: '#7C3AED',
+  cursor: 'pointer',
+  outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+}
+
+const dropdownPanelStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '100%',
+  left: 0,
+  marginTop: '4px',
+  background: '#FFFFFF',
+  border: '1px solid #E5E1FF',
+  borderRadius: '8px',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+  zIndex: 60,
+  minWidth: '80px',
+  maxHeight: '200px',
+  overflowY: 'auto',
+}
+
+/** Custom dropdown (month or year) with constrained height, consistent styling */
+function CustomDropdown(props: {
+  options?: DropdownOption[]
+  value?: number
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  disabled?: boolean
+  reverseOrder?: boolean
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const { options = [], value, onChange, disabled, reverseOrder = false } = props
+  const selectedOption = options.find((o) => o.value === value)
+  const orderedOptions = reverseOrder ? [...options].reverse() : options
+
+  useEffect(() => {
+    if (!open) return
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => !disabled && setOpen((o) => !o)}
+        style={{
+          ...dropdownTriggerStyle,
+          cursor: disabled ? 'default' : 'pointer',
+        }}
+      >
+        {selectedOption?.label ?? value}
+        <ChevronDown size={16} strokeWidth={2} />
+      </button>
+      {open && (
+        <div style={dropdownPanelStyle}>
+          {orderedOptions
+            .filter((o) => !o.disabled)
+            .map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  onChange({ target: { value: String(opt.value) } } as React.ChangeEvent<HTMLSelectElement>)
+                  setOpen(false)
+                }}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  padding: '8px 12px',
+                  border: 'none',
+                  background: opt.value === value ? 'rgba(124, 58, 237, 0.12)' : 'transparent',
+                  color: opt.value === value ? '#7C3AED' : '#1F1F1F',
+                  fontFamily: 'var(--font-body), sans-serif',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                }}
+                onMouseEnter={(e) => {
+                  if (opt.value !== value) e.currentTarget.style.backgroundColor = 'rgba(124, 58, 237, 0.06)'
+                }}
+                onMouseLeave={(e) => {
+                  if (opt.value !== value) e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Year dropdown with newest-first order */
+function CustomYearsDropdown(
+  props: React.ComponentProps<typeof CustomDropdown>
+) {
+  return <CustomDropdown {...props} reverseOrder />
+}
 
 interface DatePickerProps {
   value: Date | null
@@ -36,6 +152,8 @@ export default function DatePicker({
   const now = new Date()
   const currentYear = now.getFullYear()
   const startOfTomorrow = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate() + 1) : undefined
+  const startMonthDate = maxDate ? new Date(currentYear - 100, 0, 1) : new Date(currentYear, 0, 1)
+  const endMonthDate = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), 1) : new Date(currentYear + 5, 11, 1)
   const [displayMonth, setDisplayMonth] = useState<Date>(() => {
     if (value) return new Date(value.getFullYear(), value.getMonth(), 1)
     if (minDate && minDate > now) return new Date(minDate.getFullYear(), minDate.getMonth(), 1)
@@ -84,7 +202,7 @@ export default function DatePicker({
           borderRadius: '8px',
           padding: '10px 14px',
           paddingRight: '40px',
-          fontFamily: 'Inter, sans-serif',
+          fontFamily: 'var(--font-body), sans-serif',
           fontSize: '14px',
           color: value ? '#1F1F1F' : '#747a84',
           outline: 'none',
@@ -120,6 +238,7 @@ export default function DatePicker({
             boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
             zIndex: 50,
             padding: '12px',
+            minWidth: '280px',
           }}
           onTouchStart={(e) => {
             touchStartX.current = e.touches[0].clientX
@@ -131,9 +250,7 @@ export default function DatePicker({
             if (Math.abs(deltaX) < 50) return
             const dir = deltaX < 0 ? 1 : -1
             const next = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + dir, 1)
-            const min = new Date(currentYear, 0, 1)
-            const max = maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), 1) : new Date(currentYear + 5, 11, 1)
-            if (next < min || next > max) return
+            if (next < startMonthDate || next > endMonthDate) return
             handleMonthChange(next)
           }}
         >
@@ -156,6 +273,8 @@ export default function DatePicker({
             captionLayout="dropdown"
             navLayout="around"
             components={{
+              MonthsDropdown: CustomDropdown,
+              YearsDropdown: CustomYearsDropdown,
               Nav: (navProps: NavProps) => {
                 const { previousMonth, nextMonth, onPreviousClick, onNextClick } = navProps
                 return (
@@ -165,6 +284,7 @@ export default function DatePicker({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       marginBottom: '0.5rem',
+                      minHeight: '2.75rem',
                     }}
                   >
                     <button
@@ -208,8 +328,8 @@ export default function DatePicker({
                 )
               },
             }}
-            startMonth={new Date(currentYear, 0, 1)}
-            endMonth={maxDate ? new Date(maxDate.getFullYear(), maxDate.getMonth(), 1) : new Date(currentYear + 5, 11, 1)}
+            startMonth={startMonthDate}
+            endMonth={endMonthDate}
           />
         </div>
       )}
