@@ -38,5 +38,15 @@ export interface Reminder {
   channel: 'email' | 'in_app' | 'both'
   is_sent: boolean
   created_at: string
+  snoozed_until?: string | null
+  deleted_at?: string | null
   people?: Person
+}
+
+/** Reminder with joined people and optional entry snippet (for list/calendar) */
+export type ReminderWithDetails = Reminder & {
+  people: Pick<Person, 'name' | 'relationship_type'> | null
+  /** Joined via entry_id FK; Supabase may return object or array */
+  entries?: Pick<Entry, 'id' | 'title' | 'body' | 'date'> | Pick<Entry, 'id' | 'title' | 'body' | 'date'>[] | null
+  entry?: Pick<Entry, 'id' | 'title' | 'body' | 'date'> | null
 }

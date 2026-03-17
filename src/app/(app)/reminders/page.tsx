@@ -1,43 +1,26 @@
 import RemindersList from '@/components/reminders/RemindersList'
-import NewReminderButton from '@/components/reminders/NewReminderButton'
 
 export default function RemindersPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          gap: '0.75rem',
-          flexWrap: 'wrap',
-        }}
-      >
-        <div>
-          <p
-            style={{
-              fontSize: '0.7rem',
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              color: '#747a84',
-              marginBottom: '0.25rem',
-            }}
-          >
-            Don’t forget
-          </p>
-          <h1
-            className="serif"
-            style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
-          >
-            Reminders
-          </h1>
-        </div>
-        <NewReminderButton
-          className="btn-primary"
-          style={{ borderRadius: '50px' }}
+      <div>
+        <p
+          style={{
+            fontSize: '0.7rem',
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: '#747a84',
+            marginBottom: '0.25rem',
+          }}
         >
-          New reminder
-        </NewReminderButton>
+          Don’t forget
+        </p>
+        <h1
+          className="serif"
+          style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
+        >
+          Reminders
+        </h1>
       </div>
 
       <RemindersList />

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Person } from '@/types'
 import type { Entry } from '@/types'
+import type { ReminderWithDetails } from '@/types'
 import Select from '@/components/ui/Select'
 import DatePicker from '@/components/ui/DatePicker'
 
@@ -35,25 +36,51 @@ function getDefaultDateTime() {
 
 interface ReminderFormProps {
   onSuccess?: () => void
+  onCancel?: () => void
+  initialReminder?: ReminderWithDetails | null
+}
+
+function getDateTimeFromIso(iso: string) {
+  const d = new Date(iso)
+  const hours = d.getHours()
+  const hour12 = hours % 12 || 12
+  const period = hours < 12 ? 'AM' : 'PM'
+  const minute = d.getMinutes()
+  const minuteStr = minute === 0 ? '00' : minute === 15 ? '15' : minute === 30 ? '30' : '45'
+  return {
+    date: d,
+    hour: String(hour12),
+    minute: minuteStr,
+    period: period as 'AM' | 'PM',
+  }
 }
 
 export default function ReminderForm(props?: ReminderFormProps) {
-  const { onSuccess } = props ?? {}
+  const { onSuccess, onCancel, initialReminder } = props ?? {}
   const router = useRouter()
   const supabase = createClient()
+  const isEdit = Boolean(initialReminder?.id)
+
+  const defaultDateTime = getDefaultDateTime()
+  const initialDateTime = initialReminder
+    ? getDateTimeFromIso(initialReminder.remind_at)
+    : defaultDateTime
 
   const [people, setPeople] = useState<Person[]>([])
   const [entries, setEntries] = useState<Pick<Entry, 'id' | 'title' | 'date'>[]>([])
-  const [title, setTitle] = useState('')
-  const [personId, setPersonId] = useState('')
-  const defaultDateTime = getDefaultDateTime()
-  const [remindDate, setRemindDate] = useState<Date | null>(defaultDateTime.date)
-  const [remindHour, setRemindHour] = useState<string>(defaultDateTime.hour)
-  const [remindMinute, setRemindMinute] = useState<string>(defaultDateTime.minute)
-  const [remindPeriod, setRemindPeriod] = useState<'AM' | 'PM'>(defaultDateTime.period)
-  const [repeat, setRepeat] = useState<'none' | 'weekly' | 'monthly' | 'yearly'>('none')
-  const [channel, setChannel] = useState<'email' | 'in_app' | 'both'>('email')
-  const [entryId, setEntryId] = useState('')
+  const [title, setTitle] = useState(initialReminder?.title ?? '')
+  const [personId, setPersonId] = useState(initialReminder?.person_id ?? '')
+  const [remindDate, setRemindDate] = useState<Date | null>(initialDateTime.date)
+  const [remindHour, setRemindHour] = useState<string>(initialDateTime.hour)
+  const [remindMinute, setRemindMinute] = useState<string>(initialDateTime.minute)
+  const [remindPeriod, setRemindPeriod] = useState<'AM' | 'PM'>(initialDateTime.period)
+  const [repeat, setRepeat] = useState<'none' | 'weekly' | 'monthly' | 'yearly'>(
+    initialReminder?.repeat ?? 'none'
+  )
+  const [channel, setChannel] = useState<'email' | 'in_app' | 'both'>(
+    initialReminder?.channel ?? 'email'
+  )
+  const [entryId, setEntryId] = useState(initialReminder?.entry_id ?? '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -70,7 +97,7 @@ export default function ReminderForm(props?: ReminderFormProps) {
   useEffect(() => {
     if (!personId) {
       setEntries([])
-      setEntryId('')
+      if (!initialReminder) setEntryId('')
       return
     }
     supabase
@@ -80,9 +107,9 @@ export default function ReminderForm(props?: ReminderFormProps) {
       .order('date', { ascending: false })
       .then(({ data }) => {
         if (data) setEntries(data as Pick<Entry, 'id' | 'title' | 'date'>[])
-        setEntryId('')
+        if (!initialReminder) setEntryId('')
       })
-  }, [personId])
+  }, [personId, initialReminder])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -124,22 +151,41 @@ export default function ReminderForm(props?: ReminderFormProps) {
     const remindAtDate = new Date(remindDate)
     remindAtDate.setHours(hours24, minuteNum, 0, 0)
 
-    const payload = {
-      user_id: user.id,
-      person_id: personId,
-      entry_id: entryId || null,
-      title: title.trim(),
-      remind_at: remindAtDate.toISOString(),
-      repeat,
-      channel,
-      is_sent: false,
-    }
-
-    const { error: insertError } = await supabase.from('reminders').insert(payload)
-    if (insertError) {
-      setError(insertError.message)
-      setLoading(false)
-      return
+    if (isEdit && initialReminder?.id) {
+      const { error: updateError } = await supabase
+        .from('reminders')
+        .update({
+          person_id: personId,
+          entry_id: entryId || null,
+          title: title.trim(),
+          remind_at: remindAtDate.toISOString(),
+          repeat,
+          channel,
+          snoozed_until: null,
+        })
+        .eq('id', initialReminder.id)
+      if (updateError) {
+        setError(updateError.message)
+        setLoading(false)
+        return
+      }
+    } else {
+      const payload = {
+        user_id: user.id,
+        person_id: personId,
+        entry_id: entryId || null,
+        title: title.trim(),
+        remind_at: remindAtDate.toISOString(),
+        repeat,
+        channel,
+        is_sent: false,
+      }
+      const { error: insertError } = await supabase.from('reminders').insert(payload)
+      if (insertError) {
+        setError(insertError.message)
+        setLoading(false)
+        return
+      }
     }
 
     if (onSuccess) {
@@ -221,7 +267,7 @@ export default function ReminderForm(props?: ReminderFormProps) {
               <DatePicker
                 value={remindDate}
                 onChange={setRemindDate}
-                minDate={new Date()}
+                minDate={isEdit ? undefined : new Date()}
                 placeholder="Select date…"
               />
             </div>
@@ -340,12 +386,12 @@ export default function ReminderForm(props?: ReminderFormProps) {
               boxShadow: '0 2px 8px rgba(124, 58, 237, 0.25)',
             }}
           >
-            {loading ? 'Saving…' : 'Create reminder'}
+            {loading ? 'Saving…' : isEdit ? 'Update reminder' : 'Create reminder'}
           </button>
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => router.back()}
+            onClick={() => (onCancel ? onCancel() : onSuccess ? onSuccess() : router.back())}
           >
             Cancel
           </button>
