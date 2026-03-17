@@ -101,7 +101,12 @@ export default function PersonForm({ person, onSuccess }: PersonFormProps) {
           <label className="label" htmlFor="birthday">Birthday (optional)</label>
           <DatePicker
             value={birthdayDate}
-            onChange={(d) => setBirthday(d.toISOString().split('T')[0])}
+            onChange={(d) => {
+              const y = d.getFullYear()
+              const m = String(d.getMonth() + 1).padStart(2, '0')
+              const day = String(d.getDate()).padStart(2, '0')
+              setBirthday(`${y}-${m}-${day}`)
+            }}
             placeholder="Select date…"
             maxDate={new Date()}
           />

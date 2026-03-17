@@ -11,7 +11,7 @@ import Toast, { type ToastItem } from '@/components/ui/Toast'
 import type { Person } from '@/types'
 import type { ReminderWithDetails } from '@/types'
 
-export type ListFilter = 'all' | 'active' | 'done' | 'deleted'
+export type ListFilter = 'all' | 'active' | 'done'
 export type ViewMode = 'list' | 'calendar'
 
 async function fetchReminders(supabase: ReturnType<typeof createClient>) {
@@ -47,8 +47,6 @@ function filterReminders(
     }
     case 'done':
       return reminders.filter((r) => !r.deleted_at && r.is_sent)
-    case 'deleted':
-      return reminders.filter((r) => Boolean(r.deleted_at))
     default:
       return reminders.filter((r) => !r.deleted_at)
   }
@@ -143,32 +141,16 @@ export default function RemindersList() {
   }
 
   async function handleDelete(id: string) {
-    const prev = reminders.find((r) => r.id === id)
     setActioningId(id)
-    // Soft delete: requires reminders.deleted_at (timestamptz, nullable) in Supabase
-    await supabase
-      .from('reminders')
-      .update({ deleted_at: new Date().toISOString() })
-      .eq('id', id)
+    await supabase.from('reminders').delete().eq('id', id)
     await refresh()
     setActioningId(null)
-    if (prev) {
-      setToast({
-        id: `delete-${Date.now()}`,
-        message: 'Reminder deleted',
-        undo: async () => {
-          await supabase.from('reminders').update({ deleted_at: null }).eq('id', id)
-          refresh()
-        },
-      })
-    }
   }
 
   const filterTabs: { value: ListFilter; label: string }[] = [
     { value: 'all', label: 'All' },
     { value: 'active', label: 'Active' },
     { value: 'done', label: 'Done' },
-    { value: 'deleted', label: 'Deleted' },
   ]
 
   if (loading) {
@@ -298,13 +280,11 @@ export default function RemindersList() {
                   marginBottom: '0.75rem',
                 }}
               >
-                {listFilter === 'deleted'
-                  ? 'No deleted reminders'
-                  : listFilter === 'done'
-                    ? 'No completed reminders'
-                    : listFilter === 'active'
-                      ? 'No active reminders'
-                      : 'No reminders yet'}
+                {listFilter === 'done'
+                  ? 'No completed reminders'
+                  : listFilter === 'active'
+                    ? 'No active reminders'
+                    : 'No reminders yet'}
               </p>
               <p
                 style={{
