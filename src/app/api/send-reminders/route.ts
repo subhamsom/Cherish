@@ -187,8 +187,8 @@ export async function GET(request: Request) {
       })
 
       await resend.emails.send({
-        from: 'Cherish Reminders <reminders@cherish.em>',
-        to: email!,
+        from: 'Cherish <delivered@resend.dev>',
+        to: email,
         subject: `💜 Reminder: ${reminder.title}`,
         html,
       })

@@ -28,8 +28,9 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login')
   const isCallbackRoute = request.nextUrl.pathname === '/auth/callback'
   const isPublicRoute = request.nextUrl.pathname === '/'
+  const isCronRoute = request.nextUrl.pathname === '/api/send-reminders'
 
-  if (!user && !isAuthRoute && !isCallbackRoute && !isPublicRoute) {
+  if (!user && !isAuthRoute && !isCallbackRoute && !isPublicRoute && !isCronRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
