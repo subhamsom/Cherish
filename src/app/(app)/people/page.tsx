@@ -2,160 +2,288 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Person } from '@/types'
 import AddPersonButton from '@/components/dashboard/AddPersonButton'
-
-const RELATIONSHIP_BORDER_COLORS: Record<string, string> = {
-  partner: '#F9A8D4',
-  friend: '#93C5FD',
-  family: '#86EFAC',
-  colleague: '#FCD34D',
-  other: '#C4B5FD',
-}
+import { RELATIONSHIP_COLORS, RELATIONSHIP_BG, formatDayMonth, formatBirthday } from '@/lib/people'
 
 export default async function PeoplePage() {
   const supabase = await createClient()
   const { data: people, error: peopleError } = await supabase
     .from('people')
-    .select('*, entries(count)')
+    .select('*')
     .order('name')
 
   if (peopleError) {
     console.error('[People page] Supabase error:', peopleError.message, peopleError.details)
   }
 
+  const peopleList = (people as Person[]) ?? []
+  const peopleIds = peopleList.map((p) => p.id)
+
+  const statsByPersonId = new Map<string, { count: number; lastDate: string | null }>()
+
+  if (!peopleError && peopleIds.length > 0) {
+    const { data: entries, error: entriesError } = await supabase
+      .from('entries')
+      .select('person_id, created_at, date')
+      .in('person_id', peopleIds)
+      .order('created_at', { ascending: false })
+
+    if (entriesError) {
+      console.error('[People page] entries stats error:', entriesError.message, entriesError.details)
+    } else {
+      for (const row of entries ?? []) {
+        const personId = (row as { person_id?: string }).person_id
+        if (!personId) continue
+        const existing = statsByPersonId.get(personId)
+        if (!existing) {
+          statsByPersonId.set(personId, {
+            count: 1,
+            lastDate: (row as { date?: string | null }).date ?? (row as { created_at?: string }).created_at ?? null,
+          })
+        } else {
+          existing.count += 1
+        }
+      }
+    }
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
       {peopleError && (
-        <div role="alert" style={{ padding: '1rem', background: '#FEE2E2', color: '#991B1B', borderRadius: '8px', fontSize: '0.875rem' }}>
-          Couldn&apos;t load people: {peopleError.message}. Check the terminal for details and ensure Supabase tables and RLS are set up.
+        <div
+          role="alert"
+          style={{
+            padding: '1rem 1.25rem',
+            background: 'rgba(220, 38, 38, 0.08)',
+            color: '#991B1B',
+            borderRadius: '12px',
+            fontSize: '0.875rem',
+            border: '1px solid rgba(220, 38, 38, 0.2)',
+          }}
+        >
+          Couldn&apos;t load people: {peopleError.message}
         </div>
       )}
+
+      {/* Page header */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
-          gap: '0.75rem',
+          gap: '1rem',
+          flexWrap: 'wrap',
         }}
       >
         <div>
           <p
             style={{
               fontSize: '0.7rem',
-              letterSpacing: '0.16em',
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: 'var(--charcoal-muted)',
-              marginBottom: '0.25rem',
+              color: '#747a84',
+              marginBottom: '0.35rem',
+              fontWeight: 500,
             }}
           >
             Your circle
           </p>
           <h1
             className="serif"
-            style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
+            style={{ fontSize: '2.75rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}
           >
             People
           </h1>
         </div>
-        <AddPersonButton className="btn-primary">+ Add person</AddPersonButton>
+        <AddPersonButton
+          className="btn-primary"
+          style={{ borderRadius: '50px', padding: '0.65rem 1.35rem', fontSize: '0.9rem' }}
+        >
+          + Add person
+        </AddPersonButton>
       </div>
 
-      {!people?.length ? (
-        <div className="card card--subtle" style={{ padding: '2.6rem 2.4rem' }}>
+      {!peopleList?.length ? (
+        <div
+          className="card"
+          style={{
+            padding: '3.5rem 2.5rem',
+            textAlign: 'center',
+            maxWidth: '28rem',
+            margin: '0 auto',
+            background: 'rgba(255, 255, 255, 0.7)',
+            border: '1px solid var(--card-border)',
+            borderRadius: '16px',
+            boxShadow: '0 4px 24px rgba(124, 58, 237, 0.06)',
+          }}
+        >
           <p
             className="serif"
-            style={{ fontSize: '1.875rem', color: 'var(--text-primary)', marginBottom: '0.9rem' }}
+            style={{
+              fontSize: '2rem',
+              color: 'var(--text-primary)',
+              marginBottom: '0.75rem',
+              lineHeight: 1.3,
+            }}
           >
-            Everyone you love lives here.
+            Everyone you love lives here
           </p>
           <p
             style={{
-              fontSize: '0.9rem',
-              color: 'var(--charcoal-soft)',
-              marginBottom: '1.6rem',
-              maxWidth: '26rem',
+              fontSize: '0.95rem',
+              color: '#6B7280',
+              marginBottom: '2rem',
+              lineHeight: 1.6,
             }}
           >
-            Start with one person you&apos;d like to notice more often. Their page will become a
-            home for the stories you collect.
+            Add the people who matter most. Their page becomes a home for the stories, moments, and
+            little things you notice about them.
           </p>
-          <AddPersonButton className="btn-primary">Add your first person</AddPersonButton>
+          <AddPersonButton
+            className="btn-primary"
+            style={{ borderRadius: '50px', padding: '0.75rem 1.75rem' }}
+          >
+            Add your first person
+          </AddPersonButton>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-          {(people as (Person & { entries?: unknown })[]).map((person) => {
-            let entryCount = 0
-            if (Array.isArray(person.entries) && person.entries[0] != null && typeof (person.entries[0] as { count?: number }).count === 'number') {
-              entryCount = (person.entries[0] as { count: number }).count
-            } else if (typeof (person.entries as number) === 'number') {
-              entryCount = person.entries as number
-            }
-            const borderColor = RELATIONSHIP_BORDER_COLORS[person.relationship_type] ?? RELATIONSHIP_BORDER_COLORS.other
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+            gap: '1rem',
+          }}
+        >
+          {peopleList.map((person) => {
+            const stats = statsByPersonId.get(person.id) ?? { count: 0, lastDate: null }
+            const entryCount = stats.count
+            const last = stats.lastDate ? formatDayMonth(stats.lastDate) : ''
+            const relColor = RELATIONSHIP_COLORS[person.relationship_type] ?? RELATIONSHIP_COLORS.other
+            const relBg = RELATIONSHIP_BG[person.relationship_type] ?? RELATIONSHIP_BG.other
+
             return (
-              <Link key={person.id} href={`/people/${person.id}`} style={{ textDecoration: 'none' }}>
+              <Link
+                key={person.id}
+                href={`/people/${person.id}`}
+                style={{ textDecoration: 'none', display: 'block' }}
+              >
                 <div
                   className="card card--clickable"
                   style={{
+                    padding: '1.35rem 1.35rem',
+                    borderRadius: '16px',
+                    border: '1px solid var(--card-border)',
+                    background: 'rgba(255, 255, 255, 0.85)',
+                    boxShadow: '0 2px 12px rgba(124, 58, 237, 0.04)',
+                    transition: 'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease',
+                    height: '100%',
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    padding: '0.95rem 1.2rem',
+                    flexDirection: 'column',
+                    gap: '0.85rem',
                   }}
                 >
-                  <div
-                    style={{
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '50%',
-                      background: '#EDE9FE',
-                      flexShrink: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '1.15rem',
-                      color: '#7C3AED',
-                      fontFamily: 'Inter, sans-serif',
-                      fontWeight: 600,
-                      border: `3px solid ${borderColor}`,
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    {person.name[0].toUpperCase()}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div
                       style={{
-                        fontSize: '0.96rem',
-                        fontWeight: 400,
-                        color: 'var(--text-primary)',
-                        marginBottom: '0.15rem',
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '50%',
+                        background: relBg,
+                        flexShrink: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.4rem',
+                        color: relColor,
+                        fontFamily: 'var(--font-heading), serif',
+                        fontWeight: 700,
+                        border: `3px solid ${relColor}`,
+                        boxSizing: 'border-box',
                       }}
                     >
-                      {person.name}
-                    </p>
-                    <p
+                      {person.name[0].toUpperCase()}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p
+                        style={{
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          color: 'var(--text-primary)',
+                          marginBottom: '0.2rem',
+                          fontFamily: 'Inter, sans-serif',
+                        }}
+                      >
+                        {person.name}
+                      </p>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '0.7rem',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '999px',
+                          background: relBg,
+                          color: relColor,
+                          textTransform: 'capitalize',
+                          fontWeight: 500,
+                          letterSpacing: '0.04em',
+                        }}
+                      >
+                        {person.relationship_type}
+                      </span>
+                    </div>
+                    <span
                       style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--charcoal-soft)',
-                        textTransform: 'capitalize',
-                        letterSpacing: '0.06em',
+                        color: '#A78BFA',
+                        fontSize: '1.1rem',
+                        flexShrink: 0,
+                        opacity: 0.8,
                       }}
                     >
-                      {person.relationship_type}
-                    </p>
-                    <p style={{ fontSize: '0.7rem', color: 'var(--charcoal-muted)', marginTop: '0.15rem' }}>
-                      {entryCount === 0 ? 'No moments yet' : `${entryCount} moment${entryCount === 1 ? '' : 's'}`}
-                    </p>
+                      ›
+                    </span>
                   </div>
-                  {person.birthday && (
-                    <p style={{ fontSize: '0.75rem', color: 'var(--charcoal-soft)' }}>
-                      🎂{' '}
-                      {new Date(person.birthday + 'T00:00:00').toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+
+                  {entryCount === 0 ? (
+                    <p
+                      style={{
+                        fontSize: '12px',
+                        fontFamily: 'Inter, sans-serif',
+                        color: '#947BAD',
+                        margin: 0,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      No moments yet
+                    </p>
+                  ) : (
+                    <p
+                      style={{
+                        fontSize: '12px',
+                        fontFamily: 'Inter, sans-serif',
+                        color: '#747a84',
+                        margin: 0,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {entryCount} moment{entryCount === 1 ? '' : 's'}
+                      {last ? ` · Last: ${last}` : ''}
                     </p>
                   )}
-                  <span style={{ color: 'var(--charcoal-muted)', fontSize: '0.9rem' }}>›</span>
+
+                  {person.birthday && (
+                    <p
+                      style={{
+                        fontSize: '0.8rem',
+                        color: '#6B7280',
+                        margin: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                      }}
+                    >
+                      <span aria-hidden>🎂</span>
+                      {formatBirthday(person.birthday)}
+                    </p>
+                  )}
                 </div>
               </Link>
             )

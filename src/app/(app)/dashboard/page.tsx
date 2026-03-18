@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import type { Person } from '@/types'
 import { getEntryTypeBadgeStyle, getEntryTypeLabel } from '@/lib/entry-type-badges'
+import { RELATIONSHIP_COLORS, RELATIONSHIP_BG, formatBirthday } from '@/lib/people'
 import CaptureMomentButton from '@/components/dashboard/CaptureMomentButton'
 import AddPersonButton from '@/components/dashboard/AddPersonButton'
 
@@ -134,92 +135,102 @@ export default async function DashboardPage() {
               gap: '0.9rem',
             }}
           >
-            {peopleToShow.map((person) => (
-              <Link key={person.id} href={`/people/${person.id}`} style={{ textDecoration: 'none' }}>
-                <div
-                  className="card card--clickable"
-                  style={{
-                    padding: '1.1rem 1.1rem 1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    gap: '0.55rem',
-                  }}
-                >
+            {peopleToShow.map((person) => {
+              const relColor = RELATIONSHIP_COLORS[person.relationship_type] ?? RELATIONSHIP_COLORS.other
+              const relBg = RELATIONSHIP_BG[person.relationship_type] ?? RELATIONSHIP_BG.other
+              return (
+                <Link key={person.id} href={`/people/${person.id}`} style={{ textDecoration: 'none' }}>
                   <div
+                    className="card card--clickable"
                     style={{
+                      padding: '1.1rem 1.15rem',
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.7rem',
-                      width: '100%',
-                      justifyContent: 'space-between',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '0.6rem',
+                      borderRadius: '14px',
+                      border: '1px solid var(--card-border)',
+                      background: 'rgba(255, 255, 255, 0.85)',
+                      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.04)',
                     }}
                   >
                     <div
                       style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '50%',
-                        background: '#EDE9FE',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.3rem',
-                        color: '#7C3AED',
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeight: 600,
+                        gap: '0.65rem',
+                        width: '100%',
                       }}
                     >
-                      {person.name[0].toUpperCase()}
+                      <div
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '50%',
+                          background: relBg,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.2rem',
+                          color: relColor,
+                          fontFamily: 'var(--font-heading), serif',
+                          fontWeight: 700,
+                          border: `2px solid ${relColor}`,
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        {person.name[0].toUpperCase()}
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '0.68rem',
+                          padding: '0.18rem 0.45rem',
+                          borderRadius: '999px',
+                          background: relBg,
+                          color: relColor,
+                          textTransform: 'capitalize',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {person.relationship_type}
+                      </span>
                     </div>
-                    <span
+                    <p
                       style={{
-                        fontSize: '0.7rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.13em',
-                        color: 'var(--charcoal-muted)',
+                        fontSize: '0.95rem',
+                        fontWeight: 600,
+                        color: 'var(--text-primary)',
+                        margin: 0,
                       }}
                     >
-                      {person.relationship_type}
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      fontSize: '0.95rem',
-                      fontWeight: 400,
-                      color: 'var(--text-primary)',
-                    }}
-                  >
-                    {person.name}
-                  </p>
-                  {person.birthday && (
-                    <p style={{ fontSize: '0.8rem', color: 'var(--charcoal-soft)' }}>
-                      🎂{' '}
-                      {new Date(person.birthday + 'T00:00:00').toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                      {person.name}
                     </p>
-                  )}
-                </div>
-              </Link>
-            ))}
+                    {person.birthday && (
+                      <p style={{ fontSize: '0.78rem', color: '#6B7280', margin: 0 }}>
+                        🎂 {formatBirthday(person.birthday)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
             {hasMorePeople && (
               <Link href="/people" style={{ textDecoration: 'none' }}>
                 <div
                   className="card card--clickable"
                   style={{
-                    padding: '1.1rem 1.1rem',
+                    padding: '1.1rem',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     border: '1px solid var(--card-border)',
-                    background: 'var(--bg-secondary)',
+                    background: 'rgba(255, 255, 255, 0.6)',
+                    borderRadius: '14px',
                   }}
                 >
-                  <p style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--accent)' }}>View all</p>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--charcoal-soft)' }}>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--accent)', margin: 0 }}>View all</p>
+                  <p style={{ fontSize: '0.75rem', color: '#747a84', margin: '0.2rem 0 0 0' }}>
                     {(people?.length ?? 0) - PEOPLE_DISPLAY_LIMIT} more
                   </p>
                 </div>
@@ -229,34 +240,35 @@ export default async function DashboardPage() {
               <div
                 className="card card--clickable"
                 style={{
-                  padding: '1.1rem 1.1rem',
+                  padding: '1.1rem',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderStyle: 'dashed',
-                  borderColor: 'var(--card-border)',
-                  borderWidth: '1px',
+                  border: '1px dashed var(--card-border)',
+                  background: 'transparent',
+                  borderRadius: '14px',
                 }}
               >
                 <div
                   style={{
-                    width: '46px',
-                    height: '46px',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '50%',
-                    border: '1px dashed var(--accent-secondary)',
+                    border: '2px dashed #A78BFA',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: '0.55rem',
-                    color: 'var(--charcoal-soft)',
-                    fontSize: '1.4rem',
+                    marginBottom: '0.5rem',
+                    color: '#A78BFA',
+                    fontSize: '1.35rem',
+                    fontWeight: 300,
                   }}
                 >
                   +
                 </div>
-                <p style={{ fontSize: '0.8rem', color: 'var(--charcoal-soft)' }}>
-                  Add another person
+                <p style={{ fontSize: '0.8rem', color: '#747a84', margin: 0 }}>
+                  Add person
                 </p>
               </div>
             </Link>
