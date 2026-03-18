@@ -601,3 +601,17 @@ textarea:focus {
 .rdp-datepicker-panel select:focus {
   border-color: #7C3AED !important;
 }
+
+/* App header reminder dropdown — mobile: full width from top */
+@media (max-width: 768px) {
+  .reminder-dropdown-panel {
+    position: fixed !important;
+    top: 64px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border-radius: 0 0 16px 16px !important;
+  }
+}

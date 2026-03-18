@@ -47,6 +47,21 @@ export function formatSnoozedUntil(iso: string): string {
   return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true })
 }
 
+/** For notification dropdown: "Due today" or "Overdue by N days" */
+export function formatReminderDueLabel(remindAtIso: string): string {
+  const now = new Date()
+  const remindAt = new Date(remindAtIso)
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+  const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)
+  if (remindAt >= todayStart && remindAt <= todayEnd) return 'Due today'
+  if (remindAt < now) {
+    const diffMs = todayStart.getTime() - remindAt.getTime()
+    const diffDays = Math.ceil(diffMs / (24 * 60 * 60 * 1000))
+    return diffDays <= 1 ? 'Overdue by 1 day' : `Overdue by ${diffDays} days`
+  }
+  return formatRemindAtShort(remindAtIso)
+}
+
 /** Calendar color by status */
 export const STATUS_CALENDAR_COLORS: Record<ReminderStatus, string> = {
   overdue: '#DC2626',
