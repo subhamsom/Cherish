@@ -146,13 +146,7 @@ export default async function PeoplePage() {
           </AddPersonButton>
         </div>
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            gap: '1rem',
-          }}
-        >
+        <div className="peopleGrid">
           {peopleList.map((person) => {
             const stats = statsByPersonId.get(person.id) ?? { count: 0, lastDate: null }
             const entryCount = stats.count
@@ -166,124 +160,43 @@ export default async function PeoplePage() {
                 href={`/people/${person.id}`}
                 style={{ textDecoration: 'none', display: 'block' }}
               >
-                <div
-                  className="card card--clickable"
-                  style={{
-                    padding: '1.35rem 1.35rem',
-                    borderRadius: '16px',
-                    border: '1px solid var(--card-border)',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    boxShadow: '0 2px 12px rgba(124, 58, 237, 0.04)',
-                    transition: 'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.85rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                <div className="personCard">
+                  <div className="topRow">
                     <div
+                      className="avatar"
                       style={{
-                        width: '52px',
-                        height: '52px',
-                        borderRadius: '50%',
-                        background: relBg,
-                        flexShrink: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.4rem',
+                        border: `2px solid ${relColor}`,
                         color: relColor,
-                        fontFamily: 'var(--font-heading), serif',
-                        fontWeight: 700,
-                        border: `3px solid ${relColor}`,
-                        boxSizing: 'border-box',
                       }}
+                      aria-hidden
                     >
-                      {person.name[0].toUpperCase()}
+                      {person.name?.[0]?.toUpperCase() ?? '?'}
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p
-                        style={{
-                          fontSize: '1.1rem',
-                          fontWeight: 600,
-                          color: 'var(--text-primary)',
-                          marginBottom: '0.2rem',
-                          fontFamily: 'Inter, sans-serif',
-                        }}
-                      >
-                        {person.name}
-                      </p>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          fontSize: '0.7rem',
-                          padding: '0.2rem 0.55rem',
-                          borderRadius: '999px',
-                          background: relBg,
-                          color: relColor,
-                          textTransform: 'capitalize',
-                          fontWeight: 500,
-                          letterSpacing: '0.04em',
-                        }}
-                      >
-                        {person.relationship_type}
-                      </span>
-                    </div>
-                    <span
-                      style={{
-                        color: '#A78BFA',
-                        fontSize: '1.1rem',
-                        flexShrink: 0,
-                        opacity: 0.8,
-                      }}
-                    >
-                      ›
+                    <span className="relBadge" style={{ background: relBg, color: relColor }}>
+                      {person.relationship_type}
                     </span>
                   </div>
 
-                  {entryCount === 0 ? (
-                    <p
-                      style={{
-                        fontSize: '12px',
-                        fontFamily: 'Inter, sans-serif',
-                        color: '#947BAD',
-                        margin: 0,
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      No moments yet
-                    </p>
-                  ) : (
-                    <p
-                      style={{
-                        fontSize: '12px',
-                        fontFamily: 'Inter, sans-serif',
-                        color: '#747a84',
-                        margin: 0,
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      {entryCount} moment{entryCount === 1 ? '' : 's'}
-                      {last ? ` · Last: ${last}` : ''}
-                    </p>
-                  )}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <p className="name">{person.name}</p>
+                    {person.birthday && (
+                      <p className="birthday">
+                        <span aria-hidden>📅</span>
+                        {formatBirthday(person.birthday)}
+                      </p>
+                    )}
+                  </div>
 
-                  {person.birthday && (
-                    <p
-                      style={{
-                        fontSize: '0.8rem',
-                        color: '#6B7280',
-                        margin: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                      }}
-                    >
-                      <span aria-hidden>🎂</span>
-                      {formatBirthday(person.birthday)}
-                    </p>
-                  )}
+                  <div style={{ marginTop: 'auto' }}>
+                    {entryCount === 0 ? (
+                      <p className="noMoments">No moments yet</p>
+                    ) : (
+                      <p className="stats">
+                        {entryCount} moment{entryCount === 1 ? '' : 's'}
+                        {last ? ` · Last: ${last}` : ''}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </Link>
             )
