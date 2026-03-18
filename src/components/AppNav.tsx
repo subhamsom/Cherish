@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Home, Users, CalendarClock, ChevronDown } from 'lucide-react'
+import { Home, Users, CalendarClock, ChevronDown, Settings, LogOut } from 'lucide-react'
 import EntryModal from '@/components/entries/EntryModal'
 import PersonModal from '@/components/people/PersonModal'
 
@@ -25,6 +25,7 @@ export default function AppNav() {
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false)
   const [isPersonModalOpen, setIsPersonModalOpen] = useState(false)
   const profileRef = useRef<HTMLDivElement>(null)
+  const mobileProfileRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -44,7 +45,9 @@ export default function AppNav() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileOpen(false)
+      const target = e.target as Node
+      if (profileRef.current?.contains(target) || mobileProfileRef.current?.contains(target)) return
+      setProfileOpen(false)
     }
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
@@ -53,7 +56,7 @@ export default function AppNav() {
   async function handleSignOut() {
     setProfileOpen(false)
     await supabase.auth.signOut()
-    router.push('/')
+    router.push('/login')
     router.refresh()
   }
 
@@ -172,6 +175,8 @@ export default function AppNav() {
           <button
             type="button"
             onClick={() => setProfileOpen((o) => !o)}
+            aria-expanded={profileOpen}
+            aria-haspopup="true"
             style={{
               width: '100%',
               background: 'transparent',
@@ -186,11 +191,13 @@ export default function AppNav() {
           >
             <div
               style={{
-                width: '36px',
-                height: '36px',
+                width: 32,
+                height: 32,
                 borderRadius: '50%',
                 flexShrink: 0,
                 overflow: 'hidden',
+                border: '1px solid rgba(124, 58, 237, 0.2)',
+                boxSizing: 'border-box',
                 background: user?.avatar_url ? 'transparent' : '#EDE9FE',
                 display: 'flex',
                 alignItems: 'center',
@@ -198,11 +205,11 @@ export default function AppNav() {
                 color: user?.avatar_url ? undefined : '#7C3AED',
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 600,
-                fontSize: '0.9rem',
+                fontSize: '0.8rem',
               }}
             >
               {user?.avatar_url ? (
-                <img src={user.avatar_url} alt="" width={36} height={36} style={{ objectFit: 'cover' }} />
+                <img src={user.avatar_url} alt="" width={32} height={32} style={{ objectFit: 'cover' }} />
               ) : (
                 (user?.fullName?.[0] ?? user?.email?.[0] ?? user?.firstName?.[0] ?? '?').toUpperCase()
               )}
@@ -210,37 +217,88 @@ export default function AppNav() {
             <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-primary)', flex: 1, textAlign: 'left' }}>
               {user?.firstName ?? '…'}
             </span>
-            <ChevronDown size={14} style={{ color: 'var(--charcoal-muted)', flexShrink: 0 }} />
+            <ChevronDown size={16} style={{ color: '#747a84', flexShrink: 0 }} />
           </button>
           {profileOpen && (
             <div
+              role="menu"
               style={{
                 position: 'absolute',
                 bottom: '100%',
                 left: 0,
                 right: 0,
-                marginBottom: '0.25rem',
-                background: 'var(--card-bg)',
-                border: '1px solid var(--card-border)',
-                borderRadius: '8px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                marginBottom: '0.35rem',
+                background: '#FFFFFF',
+                border: '1px solid #E5E1FF',
+                borderRadius: '12px',
+                boxShadow: '0 8px 24px rgba(124, 58, 237, 0.12)',
                 overflow: 'hidden',
+                padding: '0.75rem 0',
+                minWidth: '200px',
               }}
             >
+              <div style={{ padding: '0 1rem 0.6rem' }}>
+                <p
+                  style={{
+                    fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: '#2D1B69',
+                    margin: 0,
+                  }}
+                >
+                  {user?.fullName || user?.firstName || 'Account'}
+                </p>
+                {user?.email && (
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                      fontSize: '12px',
+                      color: '#747a84',
+                      margin: '0.2rem 0 0 0',
+                    }}
+                  >
+                    {user.email}
+                  </p>
+                )}
+              </div>
+              <div style={{ height: 1, background: '#E5E1FF', margin: '0 0 0.25rem 0' }} />
+              <Link
+                href="/settings"
+                onClick={() => setProfileOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.875rem',
+                  color: 'var(--text-primary)',
+                  textDecoration: 'none',
+                  fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                }}
+              >
+                <Settings size={16} strokeWidth={2} style={{ color: '#6B7280' }} />
+                Settings
+              </Link>
               <button
                 type="button"
                 onClick={handleSignOut}
                 style={{
                   width: '100%',
-                  padding: '0.5rem 0.75rem',
-                  fontSize: '0.8rem',
-                  color: 'var(--charcoal-soft)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.875rem',
+                  color: '#DC2626',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   textAlign: 'left',
+                  fontFamily: "'DM Sans', var(--font-body), sans-serif",
                 }}
               >
+                <LogOut size={16} strokeWidth={2} />
                 Sign out
               </button>
             </div>
@@ -285,7 +343,7 @@ export default function AppNav() {
           </div>
         </Link>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {navLinks
             .filter((link) => !link.primary)
             .map((link) => {
@@ -313,6 +371,134 @@ export default function AppNav() {
                 </Link>
               )
             })}
+          <div ref={mobileProfileRef} style={{ position: 'relative', marginLeft: '0.25rem' }}>
+            <button
+              type="button"
+              onClick={() => setProfileOpen((o) => !o)}
+              aria-expanded={profileOpen}
+              aria-haspopup="true"
+              style={{
+                padding: '0.35rem',
+                background: 'transparent',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: '1px solid rgba(124, 58, 237, 0.2)',
+                  boxSizing: 'border-box',
+                  background: user?.avatar_url ? 'transparent' : '#EDE9FE',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: user?.avatar_url ? undefined : '#7C3AED',
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                }}
+              >
+                {user?.avatar_url ? (
+                  <img src={user.avatar_url} alt="" width={32} height={32} style={{ objectFit: 'cover' }} />
+                ) : (
+                  (user?.fullName?.[0] ?? user?.email?.[0] ?? user?.firstName?.[0] ?? '?').toUpperCase()
+                )}
+              </div>
+              <ChevronDown size={16} style={{ color: '#747a84', flexShrink: 0 }} />
+            </button>
+            {profileOpen && (
+              <div
+                role="menu"
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  right: 0,
+                  marginBottom: '0.35rem',
+                  background: '#FFFFFF',
+                  border: '1px solid #E5E1FF',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 24px rgba(124, 58, 237, 0.12)',
+                  overflow: 'hidden',
+                  padding: '0.75rem 0',
+                  minWidth: '220px',
+                  zIndex: 200,
+                }}
+              >
+                <div style={{ padding: '0 1rem 0.6rem' }}>
+                  <p
+                    style={{
+                      fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#2D1B69',
+                      margin: 0,
+                    }}
+                  >
+                    {user?.fullName || user?.firstName || 'Account'}
+                  </p>
+                  {user?.email && (
+                    <p
+                      style={{
+                        fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                        fontSize: '12px',
+                        color: '#747a84',
+                        margin: '0.2rem 0 0 0',
+                      }}
+                    >
+                      {user.email}
+                    </p>
+                  )}
+                </div>
+                <div style={{ height: 1, background: '#E5E1FF', margin: '0 0 0.25rem 0' }} />
+                <Link
+                  href="/settings"
+                  onClick={() => setProfileOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.875rem',
+                    color: 'var(--text-primary)',
+                    textDecoration: 'none',
+                    fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                  }}
+                >
+                  <Settings size={16} strokeWidth={2} style={{ color: '#6B7280' }} />
+                  Settings
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.875rem',
+                    color: '#DC2626',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    fontFamily: "'DM Sans', var(--font-body), sans-serif",
+                  }}
+                >
+                  <LogOut size={16} strokeWidth={2} />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
