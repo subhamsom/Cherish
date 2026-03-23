@@ -15,10 +15,16 @@ type ReminderRecord = {
   channel: Channel
   snoozed_until: string | null
   is_sent: boolean
-  people: {
-    name: string | null
-    relationship_type: string | null
-  } | null
+  people:
+    | {
+        name: string | null
+        relationship_type: string | null
+      }
+    | Array<{
+        name: string | null
+        relationship_type: string | null
+      }>
+    | null
 }
 
 function getFirstName(fullName?: string | null, email?: string | null): string {
@@ -155,7 +161,7 @@ export async function GET(request: Request) {
   let sentCount = 0
   let skippedCount = 0
 
-  for (const reminder of reminders as ReminderRecord[]) {
+  for (const reminder of reminders as unknown as ReminderRecord[]) {
     try {
       const { data: userResult, error: userError } =
         await supabase.auth.admin.getUserById(reminder.user_id)
@@ -172,12 +178,18 @@ export async function GET(request: Request) {
 
       const user = userResult.user
       const email = user.email
+      if (!email) {
+        // Defensive: typing can still allow `undefined` even after the guard above.
+        skippedCount++
+        continue
+      }
       const fullName =
         (user.user_metadata &&
           (user.user_metadata.full_name as string | undefined)) ||
         ''
       const firstName = getFirstName(fullName, email)
-      const personName = reminder.people?.name ?? null
+      const person = reminder.people
+      const personName = Array.isArray(person) ? person[0]?.name ?? null : person?.name ?? null
 
       const html = buildEmailHtml({
         firstName,

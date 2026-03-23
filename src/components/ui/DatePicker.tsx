@@ -40,15 +40,24 @@ const dropdownPanelStyle: React.CSSProperties = {
 /** Custom dropdown (month or year) with constrained height, consistent styling */
 function CustomDropdown(props: {
   options?: DropdownOption[]
-  value?: number
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  value?: number | string | readonly string[] | undefined
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
   disabled?: boolean
   reverseOrder?: boolean
 }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const { options = [], value, onChange, disabled, reverseOrder = false } = props
-  const selectedOption = options.find((o) => o.value === value)
+  const normalizedValue =
+    typeof value === 'number'
+      ? value
+      : typeof value === 'string'
+        ? Number(value)
+        : Array.isArray(value)
+          ? Number(value[0])
+          : undefined
+
+  const selectedOption = options.find((o) => o.value === normalizedValue)
   const orderedOptions = reverseOrder ? [...options].reverse() : options
 
   useEffect(() => {
@@ -83,7 +92,7 @@ function CustomDropdown(props: {
                 key={opt.value}
                 type="button"
                 onClick={() => {
-                  onChange({ target: { value: String(opt.value) } } as React.ChangeEvent<HTMLSelectElement>)
+                  onChange?.({ target: { value: String(opt.value) } } as React.ChangeEvent<HTMLSelectElement>)
                   setOpen(false)
                 }}
                 style={{
@@ -267,7 +276,10 @@ export default function DatePicker({
             }}
             disabled={
               minDate || startOfTomorrow
-                ? { ...(minDate && { before: minDate }), ...(startOfTomorrow && { after: startOfTomorrow }) }
+                ? ({
+                    ...(minDate && { before: minDate }),
+                    ...(startOfTomorrow && { after: startOfTomorrow }),
+                  } as any)
                 : undefined
             }
             captionLayout="dropdown"
